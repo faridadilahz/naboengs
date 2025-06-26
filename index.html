@@ -1,36 +1,114 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Naboengs</title>
-  <link rel="stylesheet" href="styles.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Naboengs</title>
+    <link rel="stylesheet" href="styles.css" />
 
-  <!-- Ionicons CDN -->
-  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</head>
-<body>
-  <nav class="navbar">
-    <div class="logo">
+    <!-- Ionicons CDN -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">
         <img src="img/logo transparent 512.png" alt="Logo" />
       </div>
     </nav>
 
-  <section id="tabs">
-    <button class="tab active">
-      <ion-icon name="hourglass-outline"></ion-icon>
-      Ditabung
-    </button>
-    <button class="tab">
-      <ion-icon name="checkmark-outline"></ion-icon>
-      Selesai
-    </button>
-  </section>
+    <section id="tabs">
+      <button class="tab active">
+        <ion-icon name="hourglass-outline"></ion-icon>
+        Ditabung
+      </button>
+      <button class="tab">
+        <ion-icon name="checkmark-outline"></ion-icon>
+        Selesai
+      </button>
+    </section>
 
-  <button id="add-button">
-    <ion-icon name="add-outline"></ion-icon>
-  </button>
+    <button id="add-button">
+      <ion-icon name="add-outline"></ion-icon>
+    </button>
 
-</body>
+    <section id="add-tab" class="tab form">
+      <div class="form-container">
+        <label for="image-upload">Gambar</label>
+        <input type="file" id="image-upload" accept="image/*" />
+
+        <label for="nama">Nama</label>
+        <input type="text" id="nama" placeholder="Masukkan Nama" />
+
+        <label for="target">Target (Rp)</label>
+        <input type="text" id="target" placeholder="Contoh: Rp 2.000.000" />
+
+        <label for="perhari">Per Hari (Rp)</label>
+        <input type="text" id="perhari" placeholder="Contoh: Rp 20.000" />
+      </div>
+    </section>
+
+    <script>
+  const addButton = document.getElementById("add-button");
+  const addTab = document.querySelector(".tab.form");
+
+  // Toggle form saat tombol ➕ diklik
+  addButton.addEventListener("click", (e) => {
+    e.stopPropagation(); // biar gak langsung nutup
+    const isShown = getComputedStyle(addTab).display !== "none";
+    addTab.style.display = isShown ? "none" : "flex";
+
+    if (!isShown) {
+      addTab.scrollIntoView({ behavior: "smooth" });
+    }
+  });
+
+  // Tutup form jika klik di luar elemen
+  document.addEventListener("click", (e) => {
+    const isClickInsideForm = addTab.contains(e.target);
+    const isClickAddBtn = addButton.contains(e.target);
+
+    if (!isClickInsideForm && !isClickAddBtn) {
+      addTab.style.display = "none";
+    }
+  });
+
+  // Format Rupiah
+  function formatRupiah(angka) {
+    let number_string = angka.replace(/[^,\d]/g, "").toString(),
+      split = number_string.split(","),
+      sisa = split[0].length % 3,
+      rupiah = split[0].substr(0, sisa),
+      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+      let separator = sisa ? "." : "";
+      rupiah += separator + ribuan.join(".");
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
+    return "Rp " + rupiah;
+  }
+
+  function setupRupiahInput(id) {
+    const input = document.getElementById(id);
+
+    input.addEventListener("input", function (e) {
+      const value = e.target.value;
+      e.target.value = formatRupiah(value);
+    });
+  }
+
+  setupRupiahInput("target");
+  setupRupiahInput("perhari");
+</script>
+
+
+  </body>
 </html>
