@@ -7,15 +7,14 @@
     <link rel="stylesheet" href="styles.css" />
 
     <!-- Ionicons CDN -->
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+    <!-- Firebase v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   </head>
+
   <body>
     <nav class="navbar">
       <div class="logo">
@@ -38,7 +37,7 @@
       <ion-icon name="add-outline"></ion-icon>
     </button>
 
-    <section id="add-tab" class="tab form">
+    <section id="add-tab" class="tab form" style="display: none;">
       <div class="form-container">
         <label for="image-upload">Gambar</label>
         <input type="file" id="image-upload" accept="image/*" />
@@ -52,63 +51,112 @@
         <label for="perhari">Per Hari (Rp)</label>
         <input type="text" id="perhari" placeholder="Contoh: Rp 20.000" />
       </div>
+      <button id="simpan-button">Simpan</button>
     </section>
 
     <script>
-  const addButton = document.getElementById("add-button");
-  const addTab = document.querySelector(".tab.form");
+      // 🔥 Inisialisasi Firebase v8
+      const firebaseConfig = {
+        apiKey: "AIzaSyBoYdv7VKnxLcOassjGo-h8mPviTdPF5gE",
+        authDomain: "naboengs.firebaseapp.com",
+        databaseURL: "https://naboengs-default-rtdb.firebaseio.com/",
+        projectId: "naboengs",
+        storageBucket: "naboengs.appspot.com",
+        messagingSenderId: "492503828776",
+        appId: "1:492503828776:web:9c4c6cff4e820d7e69681d",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+      const tabunganRef = database.ref("tabungan");
 
-  // Toggle form saat tombol ➕ diklik
-  addButton.addEventListener("click", (e) => {
-    e.stopPropagation(); // biar gak langsung nutup
-    const isShown = getComputedStyle(addTab).display !== "none";
-    addTab.style.display = isShown ? "none" : "flex";
+      // Toggle Form
+      const addButton = document.getElementById("add-button");
+      const addTab = document.querySelector(".tab.form");
 
-    if (!isShown) {
-      addTab.scrollIntoView({ behavior: "smooth" });
-    }
-  });
+      addButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isShown = getComputedStyle(addTab).display !== "none";
+        addTab.style.display = isShown ? "none" : "flex";
 
-  // Tutup form jika klik di luar elemen
-  document.addEventListener("click", (e) => {
-    const isClickInsideForm = addTab.contains(e.target);
-    const isClickAddBtn = addButton.contains(e.target);
+        if (!isShown) {
+          addTab.scrollIntoView({ behavior: "smooth" });
+        }
+      });
 
-    if (!isClickInsideForm && !isClickAddBtn) {
-      addTab.style.display = "none";
-    }
-  });
+      document.addEventListener("click", (e) => {
+        const isClickInsideForm = addTab.contains(e.target);
+        const isClickAddBtn = addButton.contains(e.target);
+        if (!isClickInsideForm && !isClickAddBtn) {
+          addTab.style.display = "none";
+        }
+      });
 
-  // Format Rupiah
-  function formatRupiah(angka) {
-    let number_string = angka.replace(/[^,\d]/g, "").toString(),
-      split = number_string.split(","),
-      sisa = split[0].length % 3,
-      rupiah = split[0].substr(0, sisa),
-      ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+      // Format Rp
+      function formatRupiah(angka) {
+        let number_string = angka.replace(/[^,\d]/g, "").toString(),
+          split = number_string.split(","),
+          sisa = split[0].length % 3,
+          rupiah = split[0].substr(0, sisa),
+          ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-    if (ribuan) {
-      let separator = sisa ? "." : "";
-      rupiah += separator + ribuan.join(".");
-    }
+        if (ribuan) {
+          let separator = sisa ? "." : "";
+          rupiah += separator + ribuan.join(".");
+        }
 
-    rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
-    return "Rp " + rupiah;
-  }
+        rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
+        return "Rp " + rupiah;
+      }
 
-  function setupRupiahInput(id) {
-    const input = document.getElementById(id);
+      function setupRupiahInput(id) {
+        const input = document.getElementById(id);
+        input.addEventListener("input", function (e) {
+          const value = e.target.value;
+          e.target.value = formatRupiah(value);
+        });
+      }
 
-    input.addEventListener("input", function (e) {
-      const value = e.target.value;
-      e.target.value = formatRupiah(value);
-    });
-  }
+      setupRupiahInput("target");
+      setupRupiahInput("perhari");
 
-  setupRupiahInput("target");
-  setupRupiahInput("perhari");
-</script>
+      function parseRupiah(str) {
+        return str.replace(/[^\d]/g, "");
+      }
 
+      function getImageBase64(file, callback) {
+        const reader = new FileReader();
+        reader.onloadend = () => callback(reader.result);
+        reader.readAsDataURL(file);
+      }
 
+      // Simpan ke Firebase
+      document.getElementById("simpan-button").addEventListener("click", () => {
+        const nama = document.getElementById("nama").value.trim();
+        const target = parseRupiah(document.getElementById("target").value);
+        const perhari = parseRupiah(document.getElementById("perhari").value);
+        const file = document.getElementById("image-upload").files[0];
+
+        if (!nama || !target || !perhari || !file) {
+          alert("Lengkapi semua data dulu ya!");
+          return;
+        }
+
+        getImageBase64(file, (base64Image) => {
+          tabunganRef.push({
+            nama,
+            target,
+            perhari,
+            gambar: base64Image,
+          }).then(() => {
+            alert("Data berhasil disimpan!");
+            document.getElementById("nama").value = "";
+            document.getElementById("target").value = "";
+            document.getElementById("perhari").value = "";
+            document.getElementById("image-upload").value = "";
+            addTab.style.display = "none";
+          });
+        });
+      });
+    </script>
   </body>
 </html>
