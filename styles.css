@@ -1,0 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+/* Reset & Global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #1A1A19;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.menu-icon {
+  font-size: 22px;
+  color: white;
+}
+
+/* Tombol Tambah */
+#add-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  background: #357a38;
+  border: none;
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  color: white;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+/* Responsive: max 768px (HP) */
+@media screen and (max-width: 768px) {
+  .navbar {
+    background: #234123;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 70px 30px;
+  }
+
+  .logo {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.logo img {
+  width: 80px;
+  height: auto;
+  margin-left: 20px;
+  z-index: 100;
+}
+
+  .menu-icon {
+    font-size: 20px;
+  }
+
+  /* Tabs */
+  #tabs {
+    display: flex;
+    justify-content: space-around;
+    background-color: #1f1f1f;
+    border-bottom: 1px solid #444;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: #888888;
+    text-align: center;
+    cursor: pointer;
+    font-size: 20px;
+    font-family: Poppins;
+  }
+
+  .tab.active {
+    border-bottom: 3px solid #ffffff;
+    color: #ffffff;
+    font-weight: bold;
+  }
+
+  .tab ion-icon {
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  #add-button {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    width: 80px;
+    height: 80px;
+    font-size: 30px;
+  }
+}
+
+/* Responsive: 769px - 1068px (tablet/laptop tipis) */
+@media screen and (max-width: 1068px) {
+  body {
+    margin: 0 auto;
+  }
+
+  #navbar {
+    padding: 16px 40px;
+  }
+
+  .tab {
+    font-size: 15px;
+    padding: 14px;
+  }
+
+  #add-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+  }
+}
