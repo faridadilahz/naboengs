@@ -7,8 +7,14 @@
     <link rel="stylesheet" href="styles.css" />
 
     <!-- Ionicons -->
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
     <!-- Firebase v8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -17,6 +23,10 @@
   </head>
 
   <body>
+    <div id="loader-overlay">
+      <div class="loader"></div>
+    </div>
+
     <nav class="navbar">
       <div class="logo">
         <img src="img/logo transparent 512.png" alt="Logo" />
@@ -76,11 +86,14 @@
       let uid = null;
 
       // ✅ Login anonim
-      firebase.auth().signInAnonymously().catch(err => {
-        alert("Login gagal: " + err.message);
-      });
+      firebase
+        .auth()
+        .signInAnonymously()
+        .catch((err) => {
+          alert("Login gagal: " + err.message);
+        });
 
-      firebase.auth().onAuthStateChanged(user => {
+      firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           uid = user.uid;
           loadData(uid);
@@ -93,8 +106,10 @@
 
       addBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        addTab.style.display = addTab.style.display === "none" ? "flex" : "none";
-        if (addTab.style.display === "flex") addTab.scrollIntoView({ behavior: "smooth" });
+        addTab.style.display =
+          addTab.style.display === "none" ? "flex" : "none";
+        if (addTab.style.display === "flex")
+          addTab.scrollIntoView({ behavior: "smooth" });
       });
 
       document.addEventListener("click", (e) => {
@@ -146,8 +161,12 @@
           <img src="${data.gambar}" alt="${data.nama}" />
           <div class="tabungan-info">
             <strong>${data.nama}</strong>
-            <span>Target: Rp ${Number(data.target).toLocaleString("id-ID")}</span>
-            <span>Per Hari: Rp ${Number(data.perhari).toLocaleString("id-ID")}</span>
+            <span>Target: Rp ${Number(data.target).toLocaleString(
+              "id-ID"
+            )}</span>
+            <span>Per Hari: Rp ${Number(data.perhari).toLocaleString(
+              "id-ID"
+            )}</span>
           </div>
         `;
         list.appendChild(item);
@@ -161,32 +180,40 @@
         const file = document.getElementById("image-upload").files[0];
 
         if (!uid) return alert("Belum login, refresh halaman.");
-        if (!nama || !target || !perhari || !file) return alert("Lengkapi semua data dulu ya!");
+        if (!nama || !target || !perhari || !file)
+          return alert("Lengkapi semua data dulu ya!");
 
-        getImageBase64(file, base64 => {
+        getImageBase64(file, (base64) => {
           const data = { nama, target, perhari, gambar: base64 };
-          db.ref("tabungan/" + uid).push(data).then(() => {
-            alert("✅ Tersimpan!");
-            document.getElementById("nama").value = "";
-            document.getElementById("target").value = "";
-            document.getElementById("perhari").value = "";
-            document.getElementById("image-upload").value = "";
-            addTab.style.display = "none";
-            tampilkanData(data);
-          });
+          db.ref("tabungan/" + uid)
+            .push(data)
+            .then(() => {
+              alert("✅ Tersimpan!");
+              document.getElementById("nama").value = "";
+              document.getElementById("target").value = "";
+              document.getElementById("perhari").value = "";
+              document.getElementById("image-upload").value = "";
+              addTab.style.display = "none";
+              tampilkanData(data);
+            });
         });
       });
 
       // ✅ Ambil semua data dari UID
       function loadData(uid) {
         const userRef = db.ref("tabungan/" + uid);
-        userRef.once("value", snapshot => {
+        userRef.once("value", (snapshot) => {
           document.getElementById("data-list").innerHTML = "";
-          snapshot.forEach(child => {
+          snapshot.forEach((child) => {
             tampilkanData(child.val());
           });
         });
       }
+      setTimeout(() => {
+  const loader = document.getElementById("loader-overlay");
+  loader.style.opacity = 0;
+  loader.style.display = "none";
+}, 5000);
     </script>
   </body>
 </html>
