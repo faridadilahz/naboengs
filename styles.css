@@ -197,6 +197,10 @@ body {
     overflow-y: auto;
   }
 
+  .popup.show {
+    display: flex;
+  }
+
   .form-container {
     display: flex;
     flex-direction: column;
