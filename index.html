@@ -140,9 +140,6 @@
       function closePopup() {
         popup.classList.remove("show");
         document.body.style.overflow = "";
-      }
-
-      if (location.hash === "#popup") {
         history.pushState(null, "", location.pathname); // hanya hapus #popup
       }
 
