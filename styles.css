@@ -15,6 +15,28 @@ body {
   min-height: 100vh;
 }
 
+.navbar {
+  background: #234123;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px 30px;
+}
+
+.logo {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.logo img {
+  width: 40px;
+  height: auto;
+  margin-left: 0px;
+  z-index: 100;
+}
+
 .menu-icon {
   font-size: 22px;
   color: white;
@@ -30,7 +52,7 @@ body {
   border-radius: 50%;
   width: 52px;
   height: 52px;
-  color: white;
+  color: #ffffff;
   font-size: 24px;
   display: flex;
   align-items: center;
@@ -150,6 +172,31 @@ body {
     border-top: 1px solid #333;
   }
 
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center; /* Vertikal center */
+    justify-content: center; /* Horizontal center */
+    z-index: 999;
+  }
+
+  .popup-content {
+    background: #1f1f1f;
+    padding: 30px 20px;
+    border-radius: 12px;
+    width: 100%;
+    height: auto;
+    max-width: 500px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+  }
+
   .form-container {
     display: flex;
     flex-direction: column;
@@ -158,11 +205,13 @@ body {
 
   .form-container label {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 16px;
     color: #ccc;
+    text-align: left;
   }
 
   .form-container input {
+    font-family: "Poppins";
     padding: 10px;
     border: 1px solid #444;
     border-radius: 8px;
@@ -171,15 +220,21 @@ body {
     font-size: 14px;
   }
 
+  .simpan-container {
+    display: flex;
+    justify-content: center;
+  }
+
   #simpan-button {
     font-family: Poppins, sans-serif;
+    width: auto;
     padding: 10px 10px;
     color: #ffffff;
     background: #357a38;
     border: none;
     border-radius: 6px;
     margin-left: 4px;
-    margin-top: 10px;
+    margin-top: 30px;
     cursor: pointer;
     font-weight: bold;
     transition: all 0.3s;
@@ -188,32 +243,47 @@ body {
   .tabungan-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 25px;
     margin: 30px 20px;
   }
 
   .tabungan-item {
     display: flex;
+    height: auto;
     align-items: center;
     background: #f8f8f8;
     border-radius: 8px;
     padding: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border-bottom: 10px solid #357a38;
+    transition: all 0.3s;
+  }
+
+  .tabungan-item:hover {
+    filter: brightness(90%);
   }
 
   .tabungan-item img {
-    width: 100px;
-    height: 100px;
+    width: 30%;
+    aspect-ratio: 1/1;
     object-fit: cover;
     border-radius: 8px;
     margin-right: 12px;
   }
 
   .tabungan-info {
+    width: 100%;
     font-size: 20px;
     display: flex;
     flex-direction: column;
     color: #000000;
+    gap: 5px;
+    margin-left: 10px;
+  }
+
+  .estimasi-container {
+    display: flex;
+    justify-content: center;
   }
 }
 
