@@ -6,13 +6,14 @@
     <title>Naboengs</title>
     <link rel="stylesheet" href="styles.css" />
 
-    <!-- Ionicons CDN -->
+    <!-- Ionicons -->
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <!-- Firebase v8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   </head>
 
   <body>
@@ -37,7 +38,7 @@
       <ion-icon name="add-outline"></ion-icon>
     </button>
 
-    <section id="add-tab" class="tab form" style="display: none;">
+    <section id="add-tab" class="tab form" style="display: none">
       <div class="form-container">
         <label for="image-upload">Gambar</label>
         <input type="file" id="image-upload" accept="image/*" />
@@ -54,8 +55,11 @@
       <button id="simpan-button">Simpan</button>
     </section>
 
+    <section id="data-list" class="tabungan-list">
+      <!-- Data akan muncul di sini -->
+    </section>
+
     <script>
-      // 🔥 Inisialisasi Firebase v8
       const firebaseConfig = {
         apiKey: "AIzaSyBoYdv7VKnxLcOassjGo-h8mPviTdPF5gE",
         authDomain: "naboengs.firebaseapp.com",
@@ -65,54 +69,62 @@
         messagingSenderId: "492503828776",
         appId: "1:492503828776:web:9c4c6cff4e820d7e69681d",
       };
+
       firebase.initializeApp(firebaseConfig);
       const database = firebase.database();
-      const tabunganRef = database.ref("tabungan");
+      let uid = null;
+
+      // Login Anonim
+      firebase.auth().signInAnonymously().catch(err => {
+        alert("Login gagal: " + err.message);
+      });
+
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          uid = user.uid;
+          console.log("Logged in as", uid);
+          loadData();
+        }
+      });
 
       // Toggle Form
       const addButton = document.getElementById("add-button");
       const addTab = document.querySelector(".tab.form");
 
-      addButton.addEventListener("click", (e) => {
+      addButton.addEventListener("click", e => {
         e.stopPropagation();
-        const isShown = getComputedStyle(addTab).display !== "none";
-        addTab.style.display = isShown ? "none" : "flex";
-
-        if (!isShown) {
+        addTab.style.display =
+          getComputedStyle(addTab).display !== "none" ? "none" : "flex";
+        if (addTab.style.display === "flex") {
           addTab.scrollIntoView({ behavior: "smooth" });
         }
       });
 
-      document.addEventListener("click", (e) => {
-        const isClickInsideForm = addTab.contains(e.target);
-        const isClickAddBtn = addButton.contains(e.target);
-        if (!isClickInsideForm && !isClickAddBtn) {
-          addTab.style.display = "none";
-        }
+      document.addEventListener("click", e => {
+        const isInside = addTab.contains(e.target);
+        const isBtn = addButton.contains(e.target);
+        if (!isInside && !isBtn) addTab.style.display = "none";
       });
 
       // Format Rp
       function formatRupiah(angka) {
-        let number_string = angka.replace(/[^,\d]/g, "").toString(),
-          split = number_string.split(","),
-          sisa = split[0].length % 3,
-          rupiah = split[0].substr(0, sisa),
-          ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        let number_string = angka.replace(/[^,\d]/g, "").toString();
+        let split = number_string.split(",");
+        let sisa = split[0].length % 3;
+        let rupiah = split[0].substr(0, sisa);
+        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
         if (ribuan) {
           let separator = sisa ? "." : "";
           rupiah += separator + ribuan.join(".");
         }
-
-        rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;
-        return "Rp " + rupiah;
+        return "Rp " + rupiah + (split[1] ? "," + split[1] : "");
       }
 
       function setupRupiahInput(id) {
         const input = document.getElementById(id);
-        input.addEventListener("input", function (e) {
-          const value = e.target.value;
-          e.target.value = formatRupiah(value);
+        input.addEventListener("input", e => {
+          e.target.value = formatRupiah(e.target.value);
         });
       }
 
@@ -129,34 +141,61 @@
         reader.readAsDataURL(file);
       }
 
-      // Simpan ke Firebase
+      // Tampilkan ke halaman
+      function tampilkanDataKeList(data) {
+        const container = document.getElementById("data-list");
+
+        const item = document.createElement("div");
+        item.className = "tabungan-item";
+
+        item.innerHTML = `
+          <img src="${data.gambar}" alt="${data.nama}" />
+          <div class="tabungan-info">
+            <strong>${data.nama}</strong>
+            <span>Target: Rp ${Number(data.target).toLocaleString("id-ID")}</span>
+            <span>Per Hari: Rp ${Number(data.perhari).toLocaleString("id-ID")}</span>
+          </div>
+        `;
+
+        container.appendChild(item);
+      }
+
+      // Simpan data
       document.getElementById("simpan-button").addEventListener("click", () => {
         const nama = document.getElementById("nama").value.trim();
         const target = parseRupiah(document.getElementById("target").value);
         const perhari = parseRupiah(document.getElementById("perhari").value);
         const file = document.getElementById("image-upload").files[0];
 
-        if (!nama || !target || !perhari || !file) {
-          alert("Lengkapi semua data dulu ya!");
-          return;
-        }
+        if (!uid) return alert("Belum login, coba refresh halaman.");
+        if (!nama || !target || !perhari || !file)
+          return alert("Lengkapi semua data dulu ya!");
 
-        getImageBase64(file, (base64Image) => {
-          tabunganRef.push({
-            nama,
-            target,
-            perhari,
-            gambar: base64Image,
-          }).then(() => {
-            alert("Data berhasil disimpan!");
+        getImageBase64(file, base64Image => {
+          const userRef = database.ref("tabungan/" + uid);
+          const data = { nama, target, perhari, gambar: base64Image };
+
+          userRef.push(data).then(() => {
+            alert("✅ Data berhasil disimpan!");
             document.getElementById("nama").value = "";
             document.getElementById("target").value = "";
             document.getElementById("perhari").value = "";
             document.getElementById("image-upload").value = "";
             addTab.style.display = "none";
+            tampilkanDataKeList(data);
           });
         });
       });
+
+      // Load semua data saat login berhasil
+      function loadData() {
+        const userRef = database.ref("tabungan/" + uid);
+        userRef.once("value", snapshot => {
+          snapshot.forEach(child => {
+            tampilkanDataKeList(child.val());
+          });
+        });
+      }
     </script>
   </body>
 </html>
