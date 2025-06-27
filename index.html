@@ -168,7 +168,7 @@
         const file = document.getElementById("image-upload").files[0];
 
         if (!uid) return alert("Belum login, coba refresh halaman.");
-        if (!nama || !target || !perhari || !file)
+        if (!nama || !target || !perhari )
           return alert("Lengkapi semua data dulu ya!");
 
         getImageBase64(file, base64Image => {
@@ -176,13 +176,14 @@
           const data = { nama, target, perhari, gambar: base64Image };
 
           userRef.push(data).then(() => {
-            alert("✅ Data berhasil disimpan!");
+            alert("Berhasil disimpan!");
             document.getElementById("nama").value = "";
             document.getElementById("target").value = "";
             document.getElementById("perhari").value = "";
             document.getElementById("image-upload").value = "";
             addTab.style.display = "none";
-            tampilkanDataKeList(data);
+            
+            tampilkanSemuaData(uid);
           });
         });
       });
