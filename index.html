@@ -56,10 +56,11 @@
     </section>
 
     <section id="data-list" class="tabungan-list">
-      <!-- Data akan muncul di sini -->
+      <!-- Data akan tampil di sini -->
     </section>
 
     <script>
+      // ✅ Firebase config
       const firebaseConfig = {
         apiKey: "AIzaSyBoYdv7VKnxLcOassjGo-h8mPviTdPF5gE",
         authDomain: "naboengs.firebaseapp.com",
@@ -71,10 +72,10 @@
       };
 
       firebase.initializeApp(firebaseConfig);
-      const database = firebase.database();
+      const db = firebase.database();
       let uid = null;
 
-      // Login Anonim
+      // ✅ Login anonim
       firebase.auth().signInAnonymously().catch(err => {
         alert("Login gagal: " + err.message);
       });
@@ -82,38 +83,33 @@
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           uid = user.uid;
-          console.log("Logged in as", uid);
-          loadData();
+          loadData(uid);
         }
       });
 
-      // Toggle Form
-      const addButton = document.getElementById("add-button");
-      const addTab = document.querySelector(".tab.form");
+      // ✅ Toggle form
+      const addBtn = document.getElementById("add-button");
+      const addTab = document.getElementById("add-tab");
 
-      addButton.addEventListener("click", e => {
+      addBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        addTab.style.display =
-          getComputedStyle(addTab).display !== "none" ? "none" : "flex";
-        if (addTab.style.display === "flex") {
-          addTab.scrollIntoView({ behavior: "smooth" });
-        }
+        addTab.style.display = addTab.style.display === "none" ? "flex" : "none";
+        if (addTab.style.display === "flex") addTab.scrollIntoView({ behavior: "smooth" });
       });
 
-      document.addEventListener("click", e => {
+      document.addEventListener("click", (e) => {
         const isInside = addTab.contains(e.target);
-        const isBtn = addButton.contains(e.target);
+        const isBtn = addBtn.contains(e.target);
         if (!isInside && !isBtn) addTab.style.display = "none";
       });
 
-      // Format Rp
+      // ✅ Format input
       function formatRupiah(angka) {
         let number_string = angka.replace(/[^,\d]/g, "").toString();
         let split = number_string.split(",");
         let sisa = split[0].length % 3;
         let rupiah = split[0].substr(0, sisa);
         let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
         if (ribuan) {
           let separator = sisa ? "." : "";
           rupiah += separator + ribuan.join(".");
@@ -123,7 +119,7 @@
 
       function setupRupiahInput(id) {
         const input = document.getElementById(id);
-        input.addEventListener("input", e => {
+        input.addEventListener("input", (e) => {
           e.target.value = formatRupiah(e.target.value);
         });
       }
@@ -141,13 +137,11 @@
         reader.readAsDataURL(file);
       }
 
-      // Tampilkan ke halaman
-      function tampilkanDataKeList(data) {
-        const container = document.getElementById("data-list");
-
+      // ✅ Tampilkan data ke halaman
+      function tampilkanData(data) {
+        const list = document.getElementById("data-list");
         const item = document.createElement("div");
         item.className = "tabungan-item";
-
         item.innerHTML = `
           <img src="${data.gambar}" alt="${data.nama}" />
           <div class="tabungan-info">
@@ -156,44 +150,40 @@
             <span>Per Hari: Rp ${Number(data.perhari).toLocaleString("id-ID")}</span>
           </div>
         `;
-
-        container.appendChild(item);
+        list.appendChild(item);
       }
 
-      // Simpan data
+      // ✅ Simpan data
       document.getElementById("simpan-button").addEventListener("click", () => {
         const nama = document.getElementById("nama").value.trim();
         const target = parseRupiah(document.getElementById("target").value);
         const perhari = parseRupiah(document.getElementById("perhari").value);
         const file = document.getElementById("image-upload").files[0];
 
-        if (!uid) return alert("Belum login, coba refresh halaman.");
-        if (!nama || !target || !perhari )
-          return alert("Lengkapi semua data dulu ya!");
+        if (!uid) return alert("Belum login, refresh halaman.");
+        if (!nama || !target || !perhari || !file) return alert("Lengkapi semua data dulu ya!");
 
-        getImageBase64(file, base64Image => {
-          const userRef = database.ref("tabungan/" + uid);
-          const data = { nama, target, perhari, gambar: base64Image };
-
-          userRef.push(data).then(() => {
-            alert("Berhasil disimpan!");
+        getImageBase64(file, base64 => {
+          const data = { nama, target, perhari, gambar: base64 };
+          db.ref("tabungan/" + uid).push(data).then(() => {
+            alert("✅ Tersimpan!");
             document.getElementById("nama").value = "";
             document.getElementById("target").value = "";
             document.getElementById("perhari").value = "";
             document.getElementById("image-upload").value = "";
             addTab.style.display = "none";
-            
-            tampilkanSemuaData(uid);
+            tampilkanData(data);
           });
         });
       });
 
-      // Load semua data saat login berhasil
-      function loadData() {
-        const userRef = database.ref("tabungan/" + uid);
+      // ✅ Ambil semua data dari UID
+      function loadData(uid) {
+        const userRef = db.ref("tabungan/" + uid);
         userRef.once("value", snapshot => {
+          document.getElementById("data-list").innerHTML = "";
           snapshot.forEach(child => {
-            tampilkanDataKeList(child.val());
+            tampilkanData(child.val());
           });
         });
       }
