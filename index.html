@@ -52,7 +52,7 @@
       <ion-icon name="add-outline"></ion-icon>
     </button>
 
-    <section id="add-tab" class="tab form popup">
+    <section id="add-tab" class="tab form popup" style="display: none;">
       <div class="popup-content">
         <div class="form-container">
           <label for="image-upload">Gambar</label>
@@ -117,30 +117,38 @@
       const addBtn = document.getElementById("add-button");
 const popup = document.getElementById("add-tab");
 
+// Tampilkan popup dan pushState
 addBtn.addEventListener("click", () => {
   popup.classList.add("show");
   document.body.style.overflow = "hidden";
   history.pushState({ popup: true }, "", "#popup");
 });
 
-window.addEventListener("popstate", (e) => {
-  if (e.state && e.state.popup) {
+// Deteksi klik di luar konten popup
+popup.addEventListener("click", (e) => {
+  if (e.target === popup) {
     closePopup();
   }
 });
 
-document.addEventListener("click", (e) => {
-  const isInside = popup.contains(e.target);
-  const isBtn = addBtn.contains(e.target);
-  if (!isInside && !isBtn && popup.classList.contains("show")) {
-    closePopup();
-  }
-});
-
+// Fungsi untuk menutup popup
 function closePopup() {
   popup.classList.remove("show");
   document.body.style.overflow = "";
+
+  // Hapus #popup dari URL tanpa reload
+  if (location.hash === "#popup") {
+    history.back();
+  }
 }
+
+// Deteksi tombol back
+window.addEventListener("popstate", (event) => {
+  if (!event.state?.popup) {
+    closePopup();
+  }
+});
+
 
       // ✅ Format input
       function formatRupiah(angka) {
