@@ -180,7 +180,7 @@ body {
     height: 100dvh;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(4px);
-    display: flex;
+    display: none;
     align-items: center; /* Vertikal center */
     justify-content: center; /* Horizontal center */
     z-index: 999;
