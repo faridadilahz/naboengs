@@ -113,22 +113,37 @@
       });
 
       // ✅ Toggle form
+      // ✅ Toggle form
       const addBtn = document.getElementById("add-button");
       const addTab = document.getElementById("add-tab");
 
       addBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        document.getElementById("add-tab").style.display = "flex";
+        addTab.style.display = "flex";
+        document.body.style.overflow = "hidden";
+        history.pushState({ popup: true }, "", "#popup");
       });
 
-      // Klik di luar popup = tutup
+      window.addEventListener("popstate", (event) => {
+        if (event.state && event.state.popup) {
+          closePopup();
+        }
+      });
+
+      function closePopup() {
+        addTab.style.display = "none";
+        document.body.style.overflow = "";
+        if (location.hash === "#popup") {
+          history.back();
+        }
+      }
+
       document.addEventListener("click", function (e) {
-        const popup = document.getElementById("add-tab");
-        const isClickInside = popup.contains(e.target);
+        const isClickInside = addTab.contains(e.target);
         const isAddBtn = addBtn.contains(e.target);
 
-        if (!isClickInside && !isAddBtn) {
-          popup.style.display = "none";
+        if (!isClickInside && !isAddBtn && addTab.style.display === "flex") {
+          closePopup();
         }
       });
 
