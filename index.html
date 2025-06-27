@@ -115,33 +115,36 @@
       // ✅ Toggle form
       // ✅ Toggle form
       const addBtn = document.getElementById("add-button");
-const popup = document.getElementById("add-tab");
+      const popup = document.getElementById("add-tab");
 
-addBtn.addEventListener("click", () => {
-  popup.classList.add("show");
-  document.body.style.overflow = "hidden";
-  history.pushState({ popup: true }, "", "#popup");
-});
+      addBtn.addEventListener("click", () => {
+        popup.classList.add("show");
+        document.body.style.overflow = "hidden";
+        history.pushState({ popup: true }, "", "#popup");
+      });
 
-window.addEventListener("popstate", (e) => {
-  if (e.state && e.state.popup) {
-    closePopup();
-  }
-});
+      window.addEventListener("popstate", (e) => {
+        if (e.state && e.state.popup) {
+          closePopup();
+        }
+      });
 
-document.addEventListener("click", (e) => {
-  const isInside = popup.contains(e.target);
-  const isBtn = addBtn.contains(e.target);
-  if (!isInside && !isBtn && popup.classList.contains("show")) {
-    closePopup();
-  }
-});
+      document.addEventListener("click", (e) => {
+        const isInside = popup.contains(e.target);
+        const isBtn = addBtn.contains(e.target);
+        if (!isInside && !isBtn && popup.classList.contains("show")) {
+          closePopup();
+        }
+      });
 
-function closePopup() {
-  popup.classList.remove("show");
-  document.body.style.overflow = "";
-}
+      function closePopup() {
+        popup.classList.remove("show");
+        document.body.style.overflow = "";
+      }
 
+      if (location.hash === "#popup") {
+        history.pushState(null, "", location.pathname); // hanya hapus #popup
+      }
 
       // ✅ Format input
       function formatRupiah(angka) {
