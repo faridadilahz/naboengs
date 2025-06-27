@@ -168,16 +168,18 @@ body {
 }
 
 .tabungan-item img {
-  width: 64px;
-  height: 64px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   border-radius: 8px;
   margin-right: 12px;
 }
 
 .tabungan-info {
+  font-size: 20px;
   display: flex;
   flex-direction: column;
+  color: #000000;
 }
 
 }
