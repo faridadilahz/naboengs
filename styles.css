@@ -57,7 +57,7 @@ body {
   }
 
   .loader-logo {
-    width:200px;
+    width: 150px;
     height: auto;
     animation: pulse 1.4s infinite ease-in-out;
   }
