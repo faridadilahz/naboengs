@@ -115,39 +115,39 @@
       // ✅ Toggle form
       // ✅ Toggle form
       const addBtn = document.getElementById("add-button");
-      const addTab = document.getElementById("add-tab");
+const popup = document.getElementById("add-tab");
 
-      addBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        addTab.style.display = "flex";
-        document.body.style.overflow = "hidden";
-        history.pushState({ popup: true }, "", "#popup");
-      });
+// Tampilkan popup saat tombol ditekan
+addBtn.addEventListener("click", () => {
+  popup.style.display = "flex";
+  document.body.style.overflow = "hidden"; // Cegah scroll belakang
+  history.pushState({ isPopup: true }, "", "#popup");
+});
 
-      window.addEventListener("popstate", (event) => {
-        if (event.state && event.state.popup) {
-          closePopup();
-        }
-      });
+// Tutup popup saat tombol back ditekan
+window.addEventListener("popstate", (e) => {
+  if (e.state && e.state.isPopup) {
+    closePopup();
+  }
+});
 
-      function closePopup() {
-        addTab.style.display = "none";
-        document.body.style.overflow = "";
+// Tutup popup saat klik luar
+document.addEventListener("click", (e) => {
+  const isClickInside = popup.contains(e.target);
+  const isBtn = addBtn.contains(e.target);
+  if (!isClickInside && !isBtn && popup.style.display === "flex") {
+    closePopup();
+  }
+});
 
-        // Kalau masih di URL #popup, hapus manual lewat replaceState
-        if (location.hash === "#popup") {
-          history.replaceState(null, "", location.pathname);
-        }
-      }
+function closePopup() {
+  popup.style.display = "none";
+  document.body.style.overflow = ""; // Balikin scroll
+  if (location.hash === "#popup") {
+    history.back(); // Hapus dari URL
+  }
+}
 
-      document.addEventListener("click", function (e) {
-        const isClickInside = addTab.contains(e.target);
-        const isAddBtn = addBtn.contains(e.target);
-
-        if (!isClickInside && !isAddBtn && addTab.style.display === "flex") {
-          closePopup();
-        }
-      });
 
       // ✅ Format input
       function formatRupiah(angka) {
