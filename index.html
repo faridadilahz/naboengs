@@ -24,9 +24,12 @@
 
   <body>
     <div id="loader-overlay">
-  <img src="img/logo transparent 512.png" alt="Logo Naboengs" class="loader-logo" />
-</div>
-
+      <img
+        src="img/logo transparent 512.png"
+        alt="Logo Naboengs"
+        class="loader-logo"
+      />
+    </div>
 
     <nav class="navbar">
       <div class="logo">
@@ -49,21 +52,29 @@
       <ion-icon name="add-outline"></ion-icon>
     </button>
 
-    <section id="add-tab" class="tab form" style="display: none">
-      <div class="form-container">
-        <label for="image-upload">Gambar</label>
-        <input type="file" id="image-upload" accept="image/*" />
+    <section id="add-tab" class="tab form popup" style="display: none">
+      <div class="popup-content">
+        <div class="form-container">
+          <label for="image-upload">Gambar</label>
+          <input type="file" id="image-upload" accept="image/*" />
 
-        <label for="nama">Nama</label>
-        <input type="text" id="nama" placeholder="Masukkan Nama" />
+          <label for="nama">Nama Barang</label>
+          <input type="text" id="nama" placeholder="Masukkan Nama" />
 
-        <label for="target">Target (Rp)</label>
-        <input type="text" id="target" placeholder="Contoh: Rp 2.000.000" />
+          <label for="target">Target</label>
+          <input type="text" id="target" placeholder="Masukkan Target" />
 
-        <label for="perhari">Per Hari (Rp)</label>
-        <input type="text" id="perhari" placeholder="Contoh: Rp 20.000" />
+          <label for="perhari">Perhari</label>
+          <input
+            type="text"
+            id="perhari"
+            placeholder="Masukkan Nominal Perhari"
+          />
+        </div>
+        <div class="simpan-container">
+          <button id="simpan-button">Simpan</button>
+        </div>
       </div>
-      <button id="simpan-button">Simpan</button>
     </section>
 
     <section id="data-list" class="tabungan-list">
@@ -106,17 +117,19 @@
       const addTab = document.getElementById("add-tab");
 
       addBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        addTab.style.display =
-          addTab.style.display === "none" ? "flex" : "none";
-        if (addTab.style.display === "flex")
-          addTab.scrollIntoView({ behavior: "smooth" });
+        e.preventDefault();
+        document.getElementById("add-tab").style.display = "flex";
       });
 
-      document.addEventListener("click", (e) => {
-        const isInside = addTab.contains(e.target);
-        const isBtn = addBtn.contains(e.target);
-        if (!isInside && !isBtn) addTab.style.display = "none";
+      // Klik di luar popup = tutup
+      document.addEventListener("click", function (e) {
+        const popup = document.getElementById("add-tab");
+        const isClickInside = popup.contains(e.target);
+        const isAddBtn = addBtn.contains(e.target);
+
+        if (!isClickInside && !isAddBtn) {
+          popup.style.display = "none";
+        }
       });
 
       // ✅ Format input
@@ -158,18 +171,25 @@
         const list = document.getElementById("data-list");
         const item = document.createElement("div");
         item.className = "tabungan-item";
+
+        const target = Number(data.target);
+        const perhari = Number(data.perhari);
+        const estimasiHari = perhari > 0 ? Math.ceil(target / perhari) : "-";
+
         item.innerHTML = `
-          <img src="${data.gambar}" alt="${data.nama}" />
-          <div class="tabungan-info">
-            <strong>${data.nama}</strong>
-            <span>Target: Rp ${Number(data.target).toLocaleString(
-              "id-ID"
-            )}</span>
-            <span>Per Hari: Rp ${Number(data.perhari).toLocaleString(
-              "id-ID"
-            )}</span>
-          </div>
-        `;
+    <img src="${data.gambar}" alt="${data.nama}" />
+    <div class="tabungan-info">
+      <strong style="font-size:26px;">${data.nama}</strong>
+      <span style="font-size:20px;">Rp${target.toLocaleString("id-ID")}</span>
+      <span style="font-size:20px;">Rp${perhari.toLocaleString(
+        "id-ID"
+      )}/ hari</span>
+      <div class="estimasi-container">
+      <span style="color: #888888; font-size: 16px;">${estimasiHari} hari lagi</span>
+      </div>
+    </div>
+  `;
+
         list.appendChild(item);
       }
 
@@ -189,7 +209,7 @@
           db.ref("tabungan/" + uid)
             .push(data)
             .then(() => {
-              alert("✅ Tersimpan!");
+              alert("Tersimpan!");
               document.getElementById("nama").value = "";
               document.getElementById("target").value = "";
               document.getElementById("perhari").value = "";
@@ -211,10 +231,10 @@
         });
       }
       setTimeout(() => {
-  const loader = document.getElementById("loader-overlay");
-  loader.style.opacity = 0;
-  loader.style.display = "none";
-}, 3000);
+        const loader = document.getElementById("loader-overlay");
+        loader.style.opacity = 0;
+        loader.style.display = "none";
+      }, 3000);
     </script>
   </body>
 </html>
