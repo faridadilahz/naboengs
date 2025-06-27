@@ -133,8 +133,10 @@
       function closePopup() {
         addTab.style.display = "none";
         document.body.style.overflow = "";
+
+        // Kalau masih di URL #popup, hapus manual lewat replaceState
         if (location.hash === "#popup") {
-          history.back();
+          history.replaceState(null, "", location.pathname);
         }
       }
 
