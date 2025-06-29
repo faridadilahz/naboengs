@@ -2,6 +2,7 @@
 
 /* Reset & Global */
 * {
+  -webkit-tap-highlight-color: transparent;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -224,6 +225,12 @@ body {
     height: auto; /* Jangan 100dvh, biar ukurannya fleksibel */
     max-height: 90vh;
     border-bottom: 7px solid #357a38;
+    transition: all 0.3s;
+  }
+
+  .popup-content:hover {
+    transform: scale(1.05);
+    border-bottom: 7px solid #00ff0d;
   }
 
   .popup.show {
