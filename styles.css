@@ -7,11 +7,9 @@
   padding: 0;
   box-sizing: border-box;
   overflow-x: hidden;
-  user-select: none;
 }
 
 body {
-  -webkit-tap-highlight-color: transparent;
   font-family: "Poppins", sans-serif;
   background-color: #1a1a19;
   color: #ffffff;
@@ -50,7 +48,7 @@ body {
   position: fixed;
   right: 20px;
   bottom: 20px;
-  background: #357a38;
+  background: #234123;
   border: none;
   border-radius: 50%;
   width: 52px;
@@ -226,13 +224,13 @@ body {
     margin: auto; /* Tengah vertikal + horizontal */
     height: auto; /* Jangan 100dvh, biar ukurannya fleksibel */
     max-height: 90vh;
-    border-bottom: 7px solid #357a38;
+    border-bottom: 7px solid #234123;
     transition: all 0.3s;
   }
 
   .popup-content:hover {
     transform: scale(1.05);
-    border-bottom: 7px solid #00ff0d;
+    border-bottom: 7px solid #357a38;
   }
 
   .popup.show {
@@ -255,7 +253,7 @@ body {
   .form-container input {
     font-family: "Poppins";
     padding: 10px;
-    border: 1px solid #357a38;
+    border: 1px solid #234123;
     border-radius: 8px;
     background: #2c2c2c;
     color: #fff;
@@ -277,7 +275,7 @@ body {
     width: auto;
     padding: 10px 10px;
     color: #ffffff;
-    background: #357a38;
+    background: #234123;
     border: none;
     border-radius: 6px;
     margin-left: 4px;
@@ -302,13 +300,14 @@ body {
     border-radius: 8px;
     padding: 12px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    border-bottom: 8px solid #357a38;
+    border-bottom: 8px solid #234123;
     transition: all 0.3s;
   }
 
   .tabungan-item:hover {
     filter: brightness(90%);
     transform: translateY(-5px);
+    border-bottom: 8px solid #357a38;
   }
 
   .tabungan-item img {
