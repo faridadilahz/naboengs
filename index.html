@@ -155,6 +155,9 @@
         }
       });
 
+      document.getElementById("simpan-button").addEventListener("click", () => {
+        closePopup();
+      });
       // ✅ Format input
       function formatRupiah(angka) {
         let number_string = angka.replace(/[^,\d]/g, "").toString();
