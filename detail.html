@@ -1,155 +1,174 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Detail Tabungan</title>
-  <link rel="stylesheet" href="detail sytle/detail.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detail Tabungan</title>
+    <link rel="stylesheet" href="detail sytle/detail.css" />
 
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+    <!-- Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Ionicons -->
-  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <!-- Ionicons -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-</head>
-<body>
-  <nav class="navbar">
-    <button onclick="history.back()" class="back-btn">
-      <ion-icon name="chevron-back-outline"></ion-icon>
-    </button>
-  </nav>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <button onclick="history.back()" class="back-btn">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+    </nav>
 
-  <main id="detail-container">
-    <img id="gambar-detail" />
-    <h2 id="nama-detail"></h2>
-    <p id="target-detail"></p>
-    <p id="perhari-detail"></p>
+    <main id="detail-container">
+      <img id="gambar-detail" />
+      <h2 id="nama-detail"></h2>
+      <p id="target-detail"></p>
+      <p id="perhari-detail"></p>
 
-    <div id="tabel-info">
-      <p id="terkumpul-text">Terkumpul: Rp 0</p>
-      <p id="kekurangan-text">Kekurangan: -</p>
-    </div>
+      <div id="tabel-info">
+        <p id="terkumpul-text">Terkumpul: Rp 0</p>
+        <p id="kekurangan-text">Kekurangan: -</p>
+      </div>
 
-    <!-- Tombol tambah -->
-    <button class="floating-button" id="open-transaksi">
-      <ion-icon name="pencil-outline"></ion-icon>
-    </button>
-  </main>
+      <!-- Tombol tambah -->
+      <button class="floating-button" id="open-transaksi">
+        <ion-icon name="pencil-outline"></ion-icon>
+      </button>
+    </main>
 
-  <!-- Popup Transaksi -->
-  <section id="popup-transaksi" class="popup">
-    <div class="popup-content">
-      <h3>Tambah/Kurang Tabungan</h3>
+    <!-- Popup Transaksi -->
+    <section id="popup-transaksi" class="popup">
+      <div class="popup-content">
+        <h3>Tambah/Kurang Tabungan</h3>
 
-      <label for="jenis">Jenis</label>
-      <select id="jenis">
-        <option value="tambah">Tambah</option>
-        <option value="kurang">Kurang</option>
-      </select>
+        <label for="jenis">Jenis</label>
+        <select id="jenis">
+          <option value="tambah">Tambah</option>
+          <option value="kurang">Kurang</option>
+        </select>
 
-      <label for="jumlah">Jumlah</label>
-      <input type="number" id="jumlah" placeholder="Masukkan nominal" />
+        <label for="jumlah">Jumlah</label>
+        <input type="number" id="jumlah" placeholder="Masukkan nominal" />
 
-      <label for="catatan">Catatan</label>
-      <input type="text" id="catatan" placeholder="Masukkan Keterangan" />
+        <label for="catatan">Catatan</label>
+        <input type="text" id="catatan" placeholder="Masukkan Keterangan" />
 
-      <div class="simpan-container">
-      <button id="simpan-transaksi">Simpan</button>
-    </div>
-    </div>
-  </section>
+        <div class="simpan-container">
+          <button id="simpan-transaksi">Simpan</button>
+        </div>
+      </div>
+    </section>
 
-  <section id="riwayat-container">
-    <h3>Riwayat</h3>
-    <ul id="riwayat-list"></ul>
-  </section>
+    <section id="riwayat-container">
+      <h3>Riwayat</h3>
+      <ul id="riwayat-list"></ul>
+    </section>
 
-  <script>
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBoYdv7VKnxLcOassjGo-h8mPviTdPF5gE",
-      authDomain: "naboengs.firebaseapp.com",
-      databaseURL: "https://naboengs-default-rtdb.firebaseio.com/",
-      projectId: "naboengs",
-      storageBucket: "naboengs.appspot.com",
-      messagingSenderId: "492503828776",
-      appId: "1:492503828776:web:9c4c6cff4e820d7e69681d",
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    <script>
+      // Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBoYdv7VKnxLcOassjGo-h8mPviTdPF5gE",
+        authDomain: "naboengs.firebaseapp.com",
+        databaseURL: "https://naboengs-default-rtdb.firebaseio.com/",
+        projectId: "naboengs",
+        storageBucket: "naboengs.appspot.com",
+        messagingSenderId: "492503828776",
+        appId: "1:492503828776:web:9c4c6cff4e820d7e69681d",
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
 
-    let uid = null;
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
+      let uid = null;
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get("id");
 
-    firebase.auth().signInAnonymously().catch(err => {
-      alert("Gagal login: " + err.message);
-    });
-
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        uid = user.uid;
-        loadDetail();
-        loadRiwayat();
-      }
-    });
-
-    // Load data tabungan detail
-    function loadDetail() {
-      db.ref(`tabungan/${uid}/${id}`).once("value", (snapshot) => {
-        const data = snapshot.val();
-        if (!data) return;
-
-        document.getElementById("gambar-detail").src = data.gambar;
-        document.getElementById("nama-detail").textContent = data.nama;
-        document.getElementById("target-detail").textContent = "Target: Rp" + Number(data.target).toLocaleString("id-ID");
-        document.getElementById("perhari-detail").textContent = "Perhari: Rp" + Number(data.perhari).toLocaleString("id-ID");
-      });
-    }
-
-    // Transaksi popup
-    const popup = document.getElementById("popup-transaksi");
-    const openBtn = document.getElementById("open-transaksi");
-    const closeBtn = document.getElementById("close-transaksi");
-    const simpanBtn = document.getElementById("simpan-transaksi");
-
-    openBtn.onclick = () => popup.classList.add("show");
-    closeBtn.onclick = () => popup.classList.remove("show");
-
-    simpanBtn.onclick = () => {
-      const jenis = document.getElementById("jenis").value;
-      const jumlah = parseInt(document.getElementById("jumlah").value);
-      const catatan = document.getElementById("catatan").value.trim();
-      if (!jumlah || !catatan) return alert("Lengkapi semua field!");
-
-      const waktu = new Date().toLocaleString("id-ID");
-      const riwayat = { jenis, jumlah, catatan, waktu };
-
-      db.ref(`riwayat/${uid}/${id}`).push(riwayat).then(() => {
-        alert("Tersimpan!");
-        popup.classList.remove("show");
-        loadRiwayat();
-      });
-    };
-
-    function loadRiwayat() {
-      const list = document.getElementById("riwayat-list");
-      list.innerHTML = "";
-      db.ref(`riwayat/${uid}/${id}`).once("value", (snapshot) => {
-        snapshot.forEach((child) => {
-          const r = child.val();
-          const li = document.createElement("li");
-          li.textContent = `${r.jenis === "tambah" ? "+" : "-"}Rp${r.jumlah.toLocaleString("id-ID")} (${r.catatan}) - ${r.waktu}`;
-          list.appendChild(li);
+      firebase
+        .auth()
+        .signInAnonymously()
+        .catch((err) => {
+          alert("Gagal login: " + err.message);
         });
+
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          uid = user.uid;
+          loadDetail();
+          loadRiwayat();
+        }
       });
-    }
-  </script>
-</body>
+
+      // Load data tabungan detail
+      function loadDetail() {
+        db.ref(`tabungan/${uid}/${id}`).once("value", (snapshot) => {
+          const data = snapshot.val();
+          if (!data) return;
+
+          document.getElementById("gambar-detail").src = data.gambar;
+          document.getElementById("nama-detail").textContent = data.nama;
+          document.getElementById("target-detail").textContent =
+            "Target: Rp" + Number(data.target).toLocaleString("id-ID");
+          document.getElementById("perhari-detail").textContent =
+            "Perhari: Rp" + Number(data.perhari).toLocaleString("id-ID");
+        });
+      }
+
+      // Transaksi popup
+      const popup = document.getElementById("popup-transaksi");
+      const openBtn = document.getElementById("open-transaksi");
+      const simpanBtn = document.getElementById("simpan-transaksi");
+
+      openBtn.onclick = () => popup.classList.add("show");
+
+      simpanBtn.onclick = () => {
+        const jenis = document.getElementById("jenis").value;
+        const jumlah = parseInt(document.getElementById("jumlah").value);
+        const catatan = document.getElementById("catatan").value.trim();
+
+        if (!jumlah || !catatan) return alert("Lengkapi semua field!");
+
+        const waktu = new Date().toLocaleString("id-ID");
+        const riwayat = { jenis, jumlah, catatan, waktu };
+
+        db.ref(`riwayat/${uid}/${id}`)
+          .push(riwayat)
+          .then(() => {
+            alert("Tersimpan!");
+            document.getElementById("jumlah").value = "";
+            document.getElementById("catatan").value = "";
+            popup.classList.remove("show");
+            loadRiwayat(); // Refresh daftar
+          });
+      };
+
+      function loadRiwayat() {
+        const list = document.getElementById("riwayat-list");
+        list.innerHTML = "";
+        db.ref(`riwayat/${uid}/${id}`).once("value", (snapshot) => {
+          snapshot.forEach((child) => {
+            const r = child.val();
+            const li = document.createElement("li");
+            li.textContent = `${
+              r.jenis === "tambah" ? "+" : "-"
+            }Rp${r.jumlah.toLocaleString("id-ID")} (${r.catatan}) - ${r.waktu}`;
+            list.appendChild(li);
+          });
+        });
+      }
+    </script>
+  </body>
 </html>
