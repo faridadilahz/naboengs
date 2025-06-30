@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Naboengs</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+
+    <!-- Ionicons -->
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+
+    <!-- Firebase v8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  </head>
+
+  <body>
+    <div id="loader-overlay">
+      <img
+        src="img/logo transparent 512.png"
+        alt="Logo Naboengs"
+        class="loader-logo"
+      />
+    </div>
+
+    <nav class="navbar">
+      <div class="logo">
+        <img src="img/logo transparent 512.png" alt="Logo" />
+      </div>
+    </nav>
+
+    <section id="tabs">
+      <button class="tab active">
+        <ion-icon name="timer-outline"></ion-icon>
+        Proses
+      </button>
+      <button class="tab">
+        <ion-icon name="checkmark-outline"></ion-icon>
+        Selesai
+      </button>
+    </section>
+
+    <button id="add-button">
+      <ion-icon name="add-outline"></ion-icon>
+    </button>
+
+    <section id="add-tab" class="tab form popup">
+      <div class="popup-content">
+        <div class="popup-header">
+          <button id="close-popup">
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="form-container">
+          <label for="image-upload">Gambar</label>
+          <input type="file" id="image-upload" accept="image/*" />
+          <label for="nama">Nama Barang</label>
+          <input type="text" id="nama" placeholder="Masukkan Nama" />
+          <label for="target">Target Tabungan</label>
+          <input type="text" id="target" placeholder="Masukkan Target" />
+          <label for="perhari">Tabungan Perhari</label>
+          <input
+            type="text"
+            id="perhari"
+            placeholder="Masukkan Nominal Tabungan"
+          />
+        </div>
+        <div class="simpan-container">
+          <button id="simpan-button">Simpan</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="data-list" class="tabungan-list">
+      <!-- Data akan tampil di sini -->
+    </section>
+
+    <p
+      id="empty-message"
+      style="
+        text-align: center;
+        color: #aaa;
+        margin-top: 40px;
+        font-size: 16px;
+        display: none;
+      "
+    >
+      Yah, belum ada yang mau ditabung nih, tambah yuk!
+    </p>
+
+    <script>
+      // ✅ Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBoYdv7VKnxLcOassjGo-h8mPviTdPF5gE",
+        authDomain: "naboengs.firebaseapp.com",
+        databaseURL: "https://naboengs-default-rtdb.firebaseio.com/",
+        projectId: "naboengs",
+        storageBucket: "naboengs.appspot.com",
+        messagingSenderId: "492503828776",
+        appId: "1:492503828776:web:9c4c6cff4e820d7e69681d",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+      let uid = null;
+
+      // ✅ Login anonim
+      firebase
+        .auth()
+        .signInAnonymously()
+        .catch((err) => {
+          alert("Login gagal: " + err.message);
+        });
+
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          uid = user.uid;
+          loadData(uid);
+        }
+      });
+
+      // ✅ Toggle form
+      // ✅ Toggle form
+      const addBtn = document.getElementById("add-button");
+      const popup = document.getElementById("add-tab");
+
+      // Tampilkan popup dan pushState
+      addBtn.addEventListener("click", () => {
+        popup.classList.add("show");
+        document.body.style.overflow = "hidden";
+        history.pushState({ popup: true }, "", "#popup");
+      });
+
+      // popup.addEventListener("click", (e) => {
+      //   if (e.target === popup) {
+      //     closePopup();
+      //   }
+      // });
+
+      // Fungsi untuk menutup popup
+      function closePopup() {
+        popup.classList.remove("show");
+        document.body.style.overflow = "";
+
+        // Hapus #popup dari URL tanpa reload
+        if (location.hash === "#popup") {
+          history.back();
+        }
+      }
+
+      // Fungsi chevron back
+      document.getElementById("close-popup").addEventListener("click", () => {
+        closePopup();
+      });
+
+      window.addEventListener("popstate", (event) => {
+        if (!event.state?.popup) {
+          closePopup();
+        }
+      });
+
+      // Format input
+      function formatRupiah(angka) {
+        let number_string = angka.replace(/[^,\d]/g, "").toString();
+        let split = number_string.split(",");
+        let sisa = split[0].length % 3;
+        let rupiah = split[0].substr(0, sisa);
+        let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        if (ribuan) {
+          let separator = sisa ? "." : "";
+          rupiah += separator + ribuan.join(".");
+        }
+        return "Rp " + rupiah + (split[1] ? "," + split[1] : "");
+      }
+
+      function setupRupiahInput(id) {
+        const input = document.getElementById(id);
+        input.addEventListener("input", (e) => {
+          e.target.value = formatRupiah(e.target.value);
+        });
+      }
+
+      setupRupiahInput("target");
+      setupRupiahInput("perhari");
+
+      function parseRupiah(str) {
+        return str.replace(/[^\d]/g, "");
+      }
+
+      function getImageBase64(file, callback) {
+        const reader = new FileReader();
+        reader.onloadend = () => callback(reader.result);
+        reader.readAsDataURL(file);
+      }
+
+      // ✅ Tampilkan data ke halaman
+      function tampilkanData(data, key) {
+        const list = document.getElementById("data-list");
+        const item = document.createElement("div");
+        item.className = "tabungan-item";
+        item.addEventListener("click", () => {
+          window.location.href = `detail.html?id=${key}`;
+        });
+
+        const target = Number(data.target);
+        const perhari = Number(data.perhari);
+        const estimasiHari = perhari > 0 ? Math.ceil(target / perhari) : "-";
+
+        item.innerHTML = `
+  <img src="${data.gambar}" alt="${data.nama}" />
+  <div class="tabungan-info">
+    <span class="nama">${data.nama}</span>
+    <span class="target">Rp${target.toLocaleString("id-ID")}</span>
+    <span class="perhari">Rp${perhari.toLocaleString("id-ID")}/hari</span>
+    <ul class="estimasi-wrapper">
+      <div class="estimasi-container">
+        <span class="estimasi-hari">${estimasiHari} hari lagi</span>
+      </div>
+    </ul>
+  </div>
+`;
+
+        list.appendChild(item);
+      }
+
+      // ✅ Simpan data
+      document.getElementById("simpan-button").addEventListener("click", () => {
+        const nama = document.getElementById("nama").value.trim();
+        const target = parseRupiah(document.getElementById("target").value);
+        const perhari = parseRupiah(document.getElementById("perhari").value);
+        const file = document.getElementById("image-upload").files[0];
+
+        if (!uid) return alert("Belum login, refresh halaman.");
+        if (!nama || !target || !perhari || !file) {
+          return alert("Lengkapi semua data dulu ya!");
+        }
+
+        getImageBase64(file, (base64) => {
+          const newRef = db.ref("tabungan/" + uid).push();
+          const key = newRef.key;
+          const data = { nama, target, perhari, gambar: base64 };
+
+          newRef.set(data).then(() => {
+            window.location.href = `detail.html?id=${key}`;
+          });
+        });
+      });
+
+      // ✅ Ambil semua data dari UID
+      function loadData(uid) {
+        const userRef = db.ref("tabungan/" + uid);
+        userRef.once("value", (snapshot) => {
+          const list = document.getElementById("data-list");
+          const emptyMessage = document.getElementById("empty-message");
+          list.innerHTML = "";
+
+          if (!snapshot.exists()) {
+            emptyMessage.style.display = "block";
+          } else {
+            emptyMessage.style.display = "none";
+            snapshot.forEach((child) => {
+  tampilkanData(child.val(), child.key);
+});
+
+          }
+        });
+      }
+
+      setTimeout(() => {
+        const loader = document.getElementById("loader-overlay");
+        loader.style.opacity = 0;
+        loader.style.display = "none";
+      }, 3000);
+    </script>
+  </body>
+</html>
