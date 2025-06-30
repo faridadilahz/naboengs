@@ -40,7 +40,7 @@
     <section id="tabs">
       <button class="tab active">
         <ion-icon name="timer-outline"></ion-icon>
-        Dalam Proses
+        Proses
       </button>
       <button class="tab">
         <ion-icon name="checkmark-outline"></ion-icon>
@@ -82,6 +82,19 @@
     <section id="data-list" class="tabungan-list">
       <!-- Data akan tampil di sini -->
     </section>
+
+    <p
+      id="empty-message"
+      style="
+        text-align: center;
+        color: #aaa;
+        margin-top: 40px;
+        font-size: 16px;
+        display: none;
+      "
+    >
+      Yah, belum ada yang mau ditabung nih, tambah yuk!
+    </p>
 
     <script>
       // ✅ Firebase config
@@ -154,19 +167,6 @@
         }
       });
 
-      document.getElementById("simpan-button").addEventListener("click", () => {
-        const nama = document.getElementById("nama").value.trim();
-        const target = document.getElementById("target").value.trim();
-        const perhari = document.getElementById("perhari").value.trim();
-        const file = document.getElementById("image-upload").files[0];
-
-        if (nama && target && perhari && file) {
-          closePopup();
-        } else {
-          alert("Lengkapi semua data dulu ya"); // Alert
-        }
-      });
-
       // Format input
       function formatRupiah(angka) {
         let number_string = angka.replace(/[^,\d]/g, "").toString();
@@ -214,11 +214,9 @@
         item.innerHTML = `
   <img src="${data.gambar}" alt="${data.nama}" />
   <div class="tabungan-info">
-    <strong class="nama">${data.nama}</strong>
+    <span class="nama">${data.nama}</span>
     <span class="target">Rp${target.toLocaleString("id-ID")}</span>
-    <span class="perhari">Rp${perhari.toLocaleString(
-      "id-ID"
-    )}/hari</span>
+    <span class="perhari">Rp${perhari.toLocaleString("id-ID")}/hari</span>
     <ul class="estimasi-wrapper">
       <div class="estimasi-container">
         <span class="estimasi-hari">${estimasiHari} hari lagi</span>
@@ -232,39 +230,60 @@
 
       // ✅ Simpan data
       document.getElementById("simpan-button").addEventListener("click", () => {
-        const nama = document.getElementById("nama").value.trim();
-        const target = parseRupiah(document.getElementById("target").value);
-        const perhari = parseRupiah(document.getElementById("perhari").value);
-        const file = document.getElementById("image-upload").files[0];
+  const nama = document.getElementById("nama").value.trim();
+  const target = parseRupiah(document.getElementById("target").value);
+  const perhari = parseRupiah(document.getElementById("perhari").value);
+  const file = document.getElementById("image-upload").files[0];
 
-        if (!uid) return alert("Belum login, refresh halaman.");
+  if (!uid) return alert("Belum login, refresh halaman.");
+  if (!nama || !target || !perhari || !file) {
+    return alert("Lengkapi semua data dulu ya!");
+  }
 
-        getImageBase64(file, (base64) => {
-          const data = { nama, target, perhari, gambar: base64 };
-          db.ref("tabungan/" + uid)
-            .push(data)
-            .then(() => {
-              alert("Tersimpan!");
-              document.getElementById("nama").value = "";
-              document.getElementById("target").value = "";
-              document.getElementById("perhari").value = "";
-              document.getElementById("image-upload").value = "";
-              addTab.style.display = "none";
-              tampilkanData(data);
-            });
-        });
+  getImageBase64(file, (base64) => {
+    const data = { nama, target, perhari, gambar: base64 };
+    db.ref("tabungan/" + uid)
+      .push(data)
+      .then(() => {
+        // Tambahkan langsung ke daftar
+        tampilkanData(data);
+
+        // Bersihkan form
+        alert("Tersimpan!");
+        document.getElementById("nama").value = "";
+        document.getElementById("target").value = "";
+        document.getElementById("perhari").value = "";
+        document.getElementById("image-upload").value = "";
+
+        // Sembunyikan pesan kosong
+        document.getElementById("empty-message").style.display = "none";
+
+        // Tutup popup
+        closePopup();
       });
+  });
+});
+
 
       // ✅ Ambil semua data dari UID
       function loadData(uid) {
         const userRef = db.ref("tabungan/" + uid);
         userRef.once("value", (snapshot) => {
-          document.getElementById("data-list").innerHTML = "";
-          snapshot.forEach((child) => {
-            tampilkanData(child.val());
-          });
+          const list = document.getElementById("data-list");
+          const emptyMessage = document.getElementById("empty-message");
+          list.innerHTML = "";
+
+          if (!snapshot.exists()) {
+            emptyMessage.style.display = "block";
+          } else {
+            emptyMessage.style.display = "none";
+            snapshot.forEach((child) => {
+              tampilkanData(child.val());
+            });
+          }
         });
       }
+
       setTimeout(() => {
         const loader = document.getElementById("loader-overlay");
         loader.style.opacity = 0;
