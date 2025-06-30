@@ -320,21 +320,23 @@ body {
   }
 
   .nama {
-    font-size: clamp(16px, 5vw, 24px);
+    font-weight: 900;
+    font-size: 22px;
   }
 
   .target {
-    font-size: clamp(14px, 4vw, 20px);
+    font-size: 18px;
   }
 
   .perhari {
     margin-bottom: clamp(6px, 2vw, 10px);
-    font-size: clamp(10px, 3.5vw, 16px);
+    font-size: 16px;
   }
 
   .estimasi-hari {
+    color: #444;
     margin-top: clamp(6px, 1.5vw, 10px);
-    font-size: clamp(8px, 2.5vw, 12px);
+    font-size: 12px;
   }
 
   .estimasi-wrapper {
@@ -345,9 +347,122 @@ body {
     margin: 0;
     width: 100%;
   }
+  
   .estimasi-container {
     display: flex;
     justify-content: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .tabungan-item img {
+    width: 30%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 12px;
+  }
+
+  .tabungan-info {
+    width: 100%;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    color: #000000;
+    gap: 5px;
+    margin-left: 10px;
+  }
+
+  .nama {
+    font-weight: 900;
+    font-size: 20px;
+  }
+
+  .target {
+    font-size: 16px;
+  }
+
+  .perhari {
+    font-size: 14px;
+  }
+
+  .estimasi-hari {
+    font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .tabungan-item img {
+    width: 40%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 12px;
+  }
+
+  .tabungan-info {
+    width: 100%;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    color: #000000;
+    gap: 5px;
+    margin-left: 10px;
+  }
+
+  .nama {
+    font-weight: 900;
+    font-size: 18px;
+  }
+
+  .target {
+    font-size: 14px;
+  }
+
+  .perhari {
+    font-size: 12px;
+  }
+
+  .estimasi-hari {
+    font-size: 8px;
+  }
+
+}
+
+@media screen and (max-width: 350px) {
+  .tabungan-item img {
+    width: 45%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 12px;
+  }
+
+  .tabungan-info {
+    width: 100%;
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    color: #000000;
+    gap: 5px;
+    margin-left: 10px;
+  }
+
+  .nama {
+    font-weight: 900;
+    font-size: 16px;
+  }
+
+  .target {
+    font-size: 12px;
+  }
+
+  .perhari {
+    font-size: 10px;
+  }
+
+  .estimasi-hari {
+    font-size: 8px;
   }
 }
 
