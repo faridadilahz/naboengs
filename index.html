@@ -126,12 +126,11 @@
         history.pushState({ popup: true }, "", "#popup");
       });
 
-      // Deteksi klik di luar konten popup
-      popup.addEventListener("click", (e) => {
-        if (e.target === popup) {
-          closePopup();
-        }
-      });
+      // popup.addEventListener("click", (e) => {
+      //   if (e.target === popup) {
+      //     closePopup();
+      //   }
+      // });
 
       // Fungsi untuk menutup popup
       function closePopup() {
@@ -156,9 +155,19 @@
       });
 
       document.getElementById("simpan-button").addEventListener("click", () => {
-        closePopup();
+        const nama = document.getElementById("nama").value.trim();
+        const target = document.getElementById("target").value.trim();
+        const perhari = document.getElementById("perhari").value.trim();
+        const file = document.getElementById("image-upload").files[0];
+
+        if (nama && target && perhari && file) {
+          closePopup();
+        } else {
+          alert("Lengkapi semua data dulu ya"); // Alert
+        }
       });
-      // ✅ Format input
+
+      // Format input
       function formatRupiah(angka) {
         let number_string = angka.replace(/[^,\d]/g, "").toString();
         let split = number_string.split(",");
@@ -236,8 +245,6 @@
         const file = document.getElementById("image-upload").files[0];
 
         if (!uid) return alert("Belum login, refresh halaman.");
-        if (!nama || !target || !perhari || !file)
-          return alert("Lengkapi semua data dulu ya!");
 
         getImageBase64(file, (base64) => {
           const data = { nama, target, perhari, gambar: base64 };
