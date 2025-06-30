@@ -39,7 +39,7 @@
 
     <section id="tabs">
       <button class="tab active">
-        <ion-icon name="hourglass-outline"></ion-icon>
+        <ion-icon name="timer-outline"></ion-icon>
         Ditabung
       </button>
       <button class="tab">
@@ -212,27 +212,20 @@
         const estimasiHari = perhari > 0 ? Math.ceil(target / perhari) : "-";
 
         item.innerHTML = `
-    <img src="${data.gambar}" alt="${data.nama}" />
-    <div class="tabungan-info">
-      <strong style="font-size:24px;">${data.nama}</strong>
-      <span style="font-size:20px;">Rp${target.toLocaleString("id-ID")}</span>
-      <span style="font-size:16px; margin-bottom: 10px;"><i>Rp${perhari.toLocaleString(
-        "id-ID"
-      )}/ hari</i></span>
-      <ul style="
-      border-top: 2px solid #e0e0e0;
-  margin-bottom: 10px;
-  min-height: 1rem;
-  flex-shrink: 0;
-  margin: 0;
-  width: 100%;
-}">
+  <img src="${data.gambar}" alt="${data.nama}" />
+  <div class="tabungan-info">
+    <strong class="nama">${data.nama}</strong>
+    <span class="target">Rp${target.toLocaleString("id-ID")}</span>
+    <span class="perhari"><i>Rp${perhari.toLocaleString(
+      "id-ID"
+    )}/ hari</i></span>
+    <ul class="estimasi-wrapper">
       <div class="estimasi-container">
-      <span style="color: #888888; font-size: 12px; margin-top:10px;">${estimasiHari} hari lagi</span>
+        <span class="estimasi-hari">${estimasiHari} hari lagi</span>
       </div>
-      </ul>
-    </div>
-  `;
+    </ul>
+  </div>
+`;
 
         list.appendChild(item);
       }
