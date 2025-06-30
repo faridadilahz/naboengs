@@ -138,25 +138,24 @@ body {
   }
 
   #add-button {
-  position: fixed;
-  right: clamp(15px, 4vw, 20px);
-  bottom: clamp(15px, 4vw, 20px);
-  background: #234123;
-  border: none;
-  border-radius: 30%;
-  width: clamp(60px, 15vw, 90px);
-  height: clamp(60px, 15vw, 90px);
-  color: #ffffff;
-  font-size: clamp(24px, 6vw, 40px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: clamp(6px, 2vw, 16px);
-  margin-top: clamp(6px, 2vw, 16px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  cursor: pointer;
-}
-
+    position: fixed;
+    right: clamp(15px, 4vw, 20px);
+    bottom: clamp(15px, 4vw, 20px);
+    background: #234123;
+    border: none;
+    border-radius: 30%;
+    width: clamp(60px, 15vw, 90px);
+    height: clamp(60px, 15vw, 90px);
+    color: #ffffff;
+    font-size: clamp(24px, 6vw, 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: clamp(6px, 2vw, 16px);
+    margin-top: clamp(6px, 2vw, 16px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+  }
 
   .tab.form {
     background: #1f1f1f;
@@ -347,7 +346,7 @@ body {
     margin: 0;
     width: 100%;
   }
-  
+
   .estimasi-container {
     display: flex;
     justify-content: center;
@@ -426,7 +425,6 @@ body {
   .estimasi-hari {
     font-size: 8px;
   }
-
 }
 
 @media screen and (max-width: 350px) {
