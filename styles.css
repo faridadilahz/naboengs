@@ -43,25 +43,6 @@ body {
   color: white;
 }
 
-/* Tombol Tambah */
-#add-button {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  background: #234123;
-  border: none;
-  border-radius: 50%;
-  width: 52px;
-  height: 52px;
-  color: #ffffff;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  cursor: pointer;
-}
-
 /* Responsive: max 768px (HP) */
 @media screen and (max-width: 768px) {
   #loader-overlay {
@@ -157,13 +138,25 @@ body {
   }
 
   #add-button {
-    margin-bottom: 10px;
-    margin-right: 10px;
-    width: 90px;
-    height: 90px;
-    font-size: 40px;
-    border-radius: 30%;
-  }
+  position: fixed;
+  right: clamp(15px, 4vw, 20px);
+  bottom: clamp(15px, 4vw, 20px);
+  background: #234123;
+  border: none;
+  border-radius: 30%;
+  width: clamp(60px, 15vw, 90px);
+  height: clamp(60px, 15vw, 90px);
+  color: #ffffff;
+  font-size: clamp(24px, 6vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: clamp(6px, 2vw, 16px);
+  margin-top: clamp(6px, 2vw, 16px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
 
   .tab.form {
     background: #1f1f1f;
@@ -326,6 +319,32 @@ body {
     margin-left: 10px;
   }
 
+  .nama {
+    font-size: clamp(16px, 5vw, 24px);
+  }
+
+  .target {
+    font-size: clamp(14px, 4vw, 20px);
+  }
+
+  .perhari {
+    margin-bottom: clamp(6px, 2vw, 10px);
+    font-size: clamp(10px, 3.5vw, 16px);
+  }
+
+  .estimasi-hari {
+    margin-top: clamp(6px, 1.5vw, 10px);
+    font-size: clamp(6px, 2.5vw, 10px);
+  }
+
+  .estimasi-wrapper {
+    border-top: 2px solid #e0e0e0;
+    margin-bottom: 10px;
+    min-height: 1rem;
+    flex-shrink: 0;
+    margin: 0;
+    width: 100%;
+  }
   .estimasi-container {
     display: flex;
     justify-content: center;
