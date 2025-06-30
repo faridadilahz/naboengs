@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Naboengs</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles/styles.css" />
 
     <!-- Ionicons -->
     <script
@@ -202,10 +202,13 @@
       }
 
       // ✅ Tampilkan data ke halaman
-      function tampilkanData(data) {
+      function tampilkanData(data, key) {
         const list = document.getElementById("data-list");
         const item = document.createElement("div");
         item.className = "tabungan-item";
+        item.addEventListener("click", () => {
+          window.location.href = `detail.html?id=${key}`;
+        });
 
         const target = Number(data.target);
         const perhari = Number(data.perhari);
@@ -230,40 +233,26 @@
 
       // ✅ Simpan data
       document.getElementById("simpan-button").addEventListener("click", () => {
-  const nama = document.getElementById("nama").value.trim();
-  const target = parseRupiah(document.getElementById("target").value);
-  const perhari = parseRupiah(document.getElementById("perhari").value);
-  const file = document.getElementById("image-upload").files[0];
+        const nama = document.getElementById("nama").value.trim();
+        const target = parseRupiah(document.getElementById("target").value);
+        const perhari = parseRupiah(document.getElementById("perhari").value);
+        const file = document.getElementById("image-upload").files[0];
 
-  if (!uid) return alert("Belum login, refresh halaman.");
-  if (!nama || !target || !perhari || !file) {
-    return alert("Lengkapi semua data dulu ya!");
-  }
+        if (!uid) return alert("Belum login, refresh halaman.");
+        if (!nama || !target || !perhari || !file) {
+          return alert("Lengkapi semua data dulu ya!");
+        }
 
-  getImageBase64(file, (base64) => {
-    const data = { nama, target, perhari, gambar: base64 };
-    db.ref("tabungan/" + uid)
-      .push(data)
-      .then(() => {
-        // Tambahkan langsung ke daftar
-        tampilkanData(data);
+        getImageBase64(file, (base64) => {
+          const newRef = db.ref("tabungan/" + uid).push();
+          const key = newRef.key;
+          const data = { nama, target, perhari, gambar: base64 };
 
-        // Bersihkan form
-        alert("Tersimpan!");
-        document.getElementById("nama").value = "";
-        document.getElementById("target").value = "";
-        document.getElementById("perhari").value = "";
-        document.getElementById("image-upload").value = "";
-
-        // Sembunyikan pesan kosong
-        document.getElementById("empty-message").style.display = "none";
-
-        // Tutup popup
-        closePopup();
+          newRef.set(data).then(() => {
+            window.location.href = `detail.html?id=${key}`;
+          });
+        });
       });
-  });
-});
-
 
       // ✅ Ambil semua data dari UID
       function loadData(uid) {
@@ -278,8 +267,9 @@
           } else {
             emptyMessage.style.display = "none";
             snapshot.forEach((child) => {
-              tampilkanData(child.val());
-            });
+  tampilkanData(child.val(), child.key);
+});
+
           }
         });
       }
