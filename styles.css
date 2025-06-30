@@ -334,7 +334,7 @@ body {
 
   .estimasi-hari {
     margin-top: clamp(6px, 1.5vw, 10px);
-    font-size: clamp(6px, 2.5vw, 10px);
+    font-size: clamp(8px, 2.5vw, 12px);
   }
 
   .estimasi-wrapper {
