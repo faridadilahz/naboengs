@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Naboengs</title>
     <link rel="stylesheet" href="styles/styles.css" />
-
-    <!-- Ionicons -->
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -15,8 +13,6 @@
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
-
-    <!-- Firebase v8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -39,18 +35,14 @@
 
     <section id="tabs">
       <button class="tab active">
-        <ion-icon name="timer-outline"></ion-icon>
-        Proses
+        <ion-icon name="timer-outline"></ion-icon> Proses
       </button>
       <button class="tab">
-        <ion-icon name="checkmark-outline"></ion-icon>
-        Selesai
+        <ion-icon name="checkmark-outline"></ion-icon> Selesai
       </button>
     </section>
 
-    <button id="add-button">
-      <ion-icon name="add-outline"></ion-icon>
-    </button>
+    <button id="add-button"><ion-icon name="add-outline"></ion-icon></button>
 
     <section id="add-tab" class="tab form popup">
       <div class="popup-content">
@@ -79,9 +71,7 @@
       </div>
     </section>
 
-    <section id="data-list" class="tabungan-list">
-      <!-- Data akan tampil di sini -->
-    </section>
+    <section id="data-list" class="tabungan-list"></section>
 
     <p
       id="empty-message"
@@ -97,7 +87,6 @@
     </p>
 
     <script>
-      // ✅ Firebase config
       const firebaseConfig = {
         apiKey: "AIzaSyBoYdv7VKnxLcOassjGo-h8mPviTdPF5gE",
         authDomain: "naboengs.firebaseapp.com",
@@ -112,14 +101,10 @@
       const db = firebase.database();
       let uid = null;
 
-      // ✅ Login anonim
       firebase
         .auth()
         .signInAnonymously()
-        .catch((err) => {
-          alert("Login gagal: " + err.message);
-        });
-
+        .catch((err) => alert("Login gagal: " + err.message));
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           uid = user.uid;
@@ -127,47 +112,28 @@
         }
       });
 
-      // ✅ Toggle form
-      // ✅ Toggle form
       const addBtn = document.getElementById("add-button");
       const popup = document.getElementById("add-tab");
 
-      // Tampilkan popup dan pushState
       addBtn.addEventListener("click", () => {
         popup.classList.add("show");
         document.body.style.overflow = "hidden";
         history.pushState({ popup: true }, "", "#popup");
       });
 
-      // popup.addEventListener("click", (e) => {
-      //   if (e.target === popup) {
-      //     closePopup();
-      //   }
-      // });
+      document
+        .getElementById("close-popup")
+        .addEventListener("click", closePopup);
+      window.addEventListener("popstate", (event) => {
+        if (!event.state?.popup) closePopup();
+      });
 
-      // Fungsi untuk menutup popup
       function closePopup() {
         popup.classList.remove("show");
         document.body.style.overflow = "";
-
-        // Hapus #popup dari URL tanpa reload
-        if (location.hash === "#popup") {
-          history.back();
-        }
+        if (location.hash === "#popup") history.back();
       }
 
-      // Fungsi chevron back
-      document.getElementById("close-popup").addEventListener("click", () => {
-        closePopup();
-      });
-
-      window.addEventListener("popstate", (event) => {
-        if (!event.state?.popup) {
-          closePopup();
-        }
-      });
-
-      // Format input
       function formatRupiah(angka) {
         let number_string = angka.replace(/[^,\d]/g, "").toString();
         let split = number_string.split(",");
@@ -188,12 +154,12 @@
         });
       }
 
-      setupRupiahInput("target");
-      setupRupiahInput("perhari");
-
       function parseRupiah(str) {
         return str.replace(/[^\d]/g, "");
       }
+
+      setupRupiahInput("target");
+      setupRupiahInput("perhari");
 
       function getImageBase64(file, callback) {
         const reader = new FileReader();
@@ -201,37 +167,6 @@
         reader.readAsDataURL(file);
       }
 
-      // ✅ Tampilkan data ke halaman
-      function tampilkanData(data, key) {
-        const list = document.getElementById("data-list");
-        const item = document.createElement("div");
-        item.className = "tabungan-item";
-        item.addEventListener("click", () => {
-          window.location.href = `detail.html?id=${key}`;
-        });
-
-        const target = Number(data.target);
-        const perhari = Number(data.perhari);
-        const estimasiHari = perhari > 0 ? Math.ceil(target / perhari) : "-";
-
-        item.innerHTML = `
-  <img src="${data.gambar}" alt="${data.nama}" />
-  <div class="tabungan-info">
-    <span class="nama">${data.nama}</span>
-    <span class="target">Rp${target.toLocaleString("id-ID")}</span>
-    <span class="perhari">Rp${perhari.toLocaleString("id-ID")}/hari</span>
-    <ul class="estimasi-wrapper">
-      <div class="estimasi-container">
-        <span class="estimasi-hari">${estimasiHari} hari lagi</span>
-      </div>
-    </ul>
-  </div>
-`;
-
-        list.appendChild(item);
-      }
-
-      // ✅ Simpan data
       document.getElementById("simpan-button").addEventListener("click", () => {
         const nama = document.getElementById("nama").value.trim();
         const target = parseRupiah(document.getElementById("target").value);
@@ -247,29 +182,71 @@
           const newRef = db.ref("tabungan/" + uid).push();
           const key = newRef.key;
           const data = { nama, target, perhari, gambar: base64 };
-
           newRef.set(data).then(() => {
-            window.location.href = `detail.html?id=${key}`;
+            alert("Tersimpan!");
+            closePopup();
           });
         });
       });
 
-      // ✅ Ambil semua data dari UID
+      function tampilkanData(data, key) {
+        const list = document.getElementById("data-list");
+        const item = document.createElement("div");
+        item.className = "tabungan-item";
+        item.addEventListener("click", () => {
+          window.location.href = `detail.html?id=${key}`;
+        });
+
+        const target = Number(data.target);
+        const perhari = Number(data.perhari);
+
+        // 🔥 Ambil data riwayat untuk hitung terkumpul
+        db.ref(`riwayat/${uid}/${key}`).once("value", (snapshot) => {
+          let terkumpul = 0;
+          snapshot.forEach((child) => {
+            const r = child.val();
+            const jumlah = Number(r.jumlah || 0);
+            terkumpul += r.jenis === "tambah" ? jumlah : -jumlah;
+          });
+
+          const sisa = target - terkumpul;
+          const estimasiHari =
+            perhari > 0 ? Math.max(1, Math.ceil(sisa / perhari)) : "-";
+
+          item.innerHTML = `
+            <img src="${data.gambar}" alt="${data.nama}" />
+            <div class="tabungan-info">
+              <span class="nama">${data.nama}</span>
+              <span class="target">Rp${target.toLocaleString("id-ID")}</span>
+              <span class="perhari">Rp${perhari.toLocaleString(
+                "id-ID"
+              )}/hari</span>
+              <ul class="estimasi-wrapper">
+                <div class="estimasi-container">
+                  <span class="estimasi-hari">${estimasiHari} hari lagi</span>
+                </div>
+              </ul>
+            </div>
+          `;
+
+          list.prepend(item);
+        });
+      }
+
       function loadData(uid) {
         const userRef = db.ref("tabungan/" + uid);
-        userRef.once("value", (snapshot) => {
-          const list = document.getElementById("data-list");
-          const emptyMessage = document.getElementById("empty-message");
-          list.innerHTML = "";
+        const list = document.getElementById("data-list");
+        const emptyMessage = document.getElementById("empty-message");
 
+        userRef.on("value", (snapshot) => {
+          list.innerHTML = "";
           if (!snapshot.exists()) {
             emptyMessage.style.display = "block";
           } else {
             emptyMessage.style.display = "none";
             snapshot.forEach((child) => {
-  tampilkanData(child.val(), child.key);
-});
-
+              tampilkanData(child.val(), child.key);
+            });
           }
         });
       }
@@ -278,7 +255,7 @@
         const loader = document.getElementById("loader-overlay");
         loader.style.opacity = 0;
         loader.style.display = "none";
-      }, 3000);
+      }, 2000);
     </script>
   </body>
 </html>
