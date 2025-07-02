@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Detail Tabungan</title>
     <link rel="stylesheet" href="detail sytle/detail.css" />
-
-    <!-- Font -->
     <link
       href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-
-    <!-- Ionicons -->
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -21,8 +17,6 @@
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
-
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -39,23 +33,18 @@
       <h2 id="nama-detail"></h2>
       <p id="target-detail"></p>
       <p id="perhari-detail"></p>
-
       <div id="tabel-info">
         <p id="terkumpul-text">Terkumpul: Rp0</p>
         <p id="kekurangan-text">Kekurangan: -</p>
       </div>
-
-      <!-- Tombol tambah -->
       <button class="floating-button" id="open-transaksi">
         <ion-icon name="pencil-outline"></ion-icon>
       </button>
     </main>
 
-    <!-- Popup Transaksi -->
     <section id="popup-transaksi" class="popup">
       <div class="popup-content">
         <h3>Tambah/Kurang Tabungan</h3>
-
         <label>Jenis</label>
         <div class="radio-group" id="jenis">
           <label class="radio-option">
@@ -67,13 +56,10 @@
             <span>Kurang</span>
           </label>
         </div>
-
         <label for="jumlah">Jumlah</label>
         <input type="text" id="jumlah" placeholder="Masukkan nominal" />
-
         <label for="keterangan">Keterangan</label>
         <input type="text" id="keterangan" placeholder="Masukkan Keterangan" />
-
         <div class="simpan-container">
           <button id="simpan-transaksi">Simpan</button>
         </div>
@@ -86,7 +72,6 @@
     </section>
 
     <script>
-      // Firebase config
       const firebaseConfig = {
         apiKey: "AIzaSyBoYdv7VKnxLcOassjGo-h8mPviTdPF5gE",
         authDomain: "naboengs.firebaseapp.com",
@@ -123,12 +108,10 @@
         }
       });
 
-      // Load data tabungan detail
       function loadDetail() {
         db.ref(`tabungan/${uid}/${id}`).on("value", (snapshot) => {
           const data = snapshot.val();
           if (!data) return;
-
           document.getElementById("gambar-detail").src = data.gambar;
           document.getElementById("nama-detail").textContent = data.nama;
           document.getElementById("target-detail").textContent =
@@ -138,26 +121,19 @@
         });
       }
 
-      // Transaksi popup
       const popup = document.getElementById("popup-transaksi");
       const openBtn = document.getElementById("open-transaksi");
       const simpanBtn = document.getElementById("simpan-transaksi");
 
       openBtn.onclick = () => {
         popup.classList.add("show");
-        setupRupiahInput("jumlah"); // Aktifkan format Rupiah saat popup dibuka
+        setupRupiahInput("jumlah");
       };
 
       simpanBtn.onclick = () => {
-        const jenis = document.querySelector(
-          'input[name="jenis"]:checked'
-        ).value;
-
-        const jumlah = parseInt(
-          parseRupiah(document.getElementById("jumlah").value)
-        );
+        const jenis = document.querySelector('input[name="jenis"]:checked').value;
+        const jumlah = parseInt(parseRupiah(document.getElementById("jumlah").value));
         const keterangan = document.getElementById("keterangan").value.trim();
-
         if (!jumlah || !keterangan) return alert("Lengkapi semua field!");
 
         const waktu = new Date().toLocaleString("id-ID");
@@ -175,27 +151,59 @@
       };
 
       function loadRiwayat() {
-      const list = document.getElementById("riwayat-list");
-      list.innerHTML = "";
-      const riwayatRef = db.ref(`riwayat/${uid}/${id}`);
-      riwayatRef.on("value", (snapshot) => {
+        const list = document.getElementById("riwayat-list");
         list.innerHTML = "";
-        snapshot.forEach((child) => {
-          const r = child.val();
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <div class="riwayat-item ${r.jenis}">
-              <div class="riwayat-top">
-                <span class="nominal">${r.jenis === "tambah" ? "+" : "-"}Rp${r.jumlah.toLocaleString("id-ID")}</span>
-                <span class="waktu">${r.waktu}</span>
+        const riwayatRef = db.ref(`riwayat/${uid}/${id}`);
+        riwayatRef.on("value", (snapshot) => {
+          list.innerHTML = "";
+          snapshot.forEach((child) => {
+            const r = child.val();
+            const li = document.createElement("li");
+            li.innerHTML = `
+              <div class="riwayat-item ${r.jenis}">
+                <div class="riwayat-top">
+                  <span class="nominal">${r.jenis === "tambah" ? "+" : "-"}Rp${r.jumlah.toLocaleString("id-ID")}</span>
+                  <span class="waktu">${r.waktu}</span>
+                </div>
+                <div class="keterangan">${r.keterangan}</div>
               </div>
-              <div class="keterangan">${r.keterangan}</div>
-            </div>
-          `;
-          list.appendChild(li);
+            `;
+            list.prepend(li);
+          });
+
+          // Panggil update total setelah memuat riwayat
+          updateTerkumpulDanKekurangan();
         });
-      });
-    }
+      }
+
+      function updateTerkumpulDanKekurangan() {
+        const riwayatRef = db.ref(`riwayat/${uid}/${id}`);
+        const tabunganRef = db.ref(`tabungan/${uid}/${id}`);
+
+        riwayatRef.once("value", (riwayatSnapshot) => {
+          let totalTerkumpul = 0;
+
+          riwayatSnapshot.forEach((child) => {
+            const r = child.val();
+            if (r.jenis === "tambah") totalTerkumpul += r.jumlah;
+            if (r.jenis === "kurang") totalTerkumpul -= r.jumlah;
+          });
+
+          tabunganRef.once("value", (tabunganSnapshot) => {
+            const tabungan = tabunganSnapshot.val();
+            const target = parseInt(tabungan.target);
+            const kekurangan = target - totalTerkumpul;
+
+            document.getElementById("terkumpul-text").textContent =
+              "Terkumpul: Rp" + totalTerkumpul.toLocaleString("id-ID");
+            document.getElementById("kekurangan-text").textContent =
+              "Kekurangan: " +
+              (kekurangan <= 0
+                ? "Selesai 🎉"
+                : "Rp" + kekurangan.toLocaleString("id-ID"));
+          });
+        });
+      }
 
       function formatRupiah(angka) {
         let number_string = angka.replace(/[^,\d]/g, "").toString();
