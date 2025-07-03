@@ -33,19 +33,25 @@
       <h2 id="nama-detail"></h2>
       <p id="target-detail"></p>
       <p id="perhari-detail"></p>
-      <div id="tabel-info">
-        <p id="terkumpul-text">Terkumpul: Rp0</p>
-        <p id="kekurangan-text">Kekurangan: -</p>
+      <div id="tabel-info" class="flex-row">
+        <div class="info-box">
+          <p class="label">Terkumpul:</p>
+          <p id="terkumpul-text" class="value">-</p>
+        </div>
+        <div class="info-box">
+          <p class="label">Kekurangan:</p>
+          <p id="kekurangan-text" class="value">-</p>
+        </div>
       </div>
+
       <button class="floating-button" id="open-transaksi">
-        <ion-icon name="pencil-outline"></ion-icon>
+        <ion-icon name="create-outline"></ion-icon>
       </button>
     </main>
 
     <section id="popup-transaksi" class="popup">
       <div class="popup-content">
-        <h3>Tambah/Kurang Tabungan</h3>
-        <label>Jenis</label>
+        <h3>Catatan Tabungan</h3>
         <div class="radio-group" id="jenis">
           <label class="radio-option">
             <input type="radio" name="jenis" value="tambah" checked />
@@ -62,6 +68,7 @@
         <input type="text" id="keterangan" placeholder="Masukkan Keterangan" />
         <div class="simpan-container">
           <button id="simpan-transaksi">Simpan</button>
+          <button id="batal-transaksi">Batal</button>
         </div>
       </div>
     </section>
@@ -115,26 +122,37 @@
           document.getElementById("gambar-detail").src = data.gambar;
           document.getElementById("nama-detail").textContent = data.nama;
           document.getElementById("target-detail").textContent =
-            "Target: Rp" + Number(data.target).toLocaleString("id-ID");
+            "Rp" + Number(data.target).toLocaleString("id-ID");
           document.getElementById("perhari-detail").textContent =
-            "Perhari: Rp" + Number(data.perhari).toLocaleString("id-ID");
+            "Rp" + Number(data.perhari).toLocaleString("id-ID") + "/hari";
         });
       }
 
       const popup = document.getElementById("popup-transaksi");
       const openBtn = document.getElementById("open-transaksi");
       const simpanBtn = document.getElementById("simpan-transaksi");
+      const batalBtn = document.getElementById("batal-transaksi");
 
       openBtn.onclick = () => {
         popup.classList.add("show");
         setupRupiahInput("jumlah");
       };
 
+      batalBtn.onclick = () => {
+        popup.classList.remove("show");
+        document.getElementById("jumlah").value = "";
+        document.getElementById("keterangan").value = "";
+      };
+
       simpanBtn.onclick = () => {
-        const jenis = document.querySelector('input[name="jenis"]:checked').value;
-        const jumlah = parseInt(parseRupiah(document.getElementById("jumlah").value));
+        const jenis = document.querySelector(
+          'input[name="jenis"]:checked'
+        ).value;
+        const jumlah = parseInt(
+          parseRupiah(document.getElementById("jumlah").value)
+        );
         const keterangan = document.getElementById("keterangan").value.trim();
-        if (!jumlah || !keterangan) return alert("Lengkapi semua field!");
+        if (!jumlah || !keterangan) return alert("Lengkapi dulu ya");
 
         const waktu = new Date().toLocaleString("id-ID");
         const riwayat = { jenis, jumlah, keterangan, waktu };
@@ -162,7 +180,9 @@
             li.innerHTML = `
               <div class="riwayat-item ${r.jenis}">
                 <div class="riwayat-top">
-                  <span class="nominal">${r.jenis === "tambah" ? "+" : "-"}Rp${r.jumlah.toLocaleString("id-ID")}</span>
+                  <span class="nominal">${
+                    r.jenis === "tambah" ? "+" : "-"
+                  }Rp${r.jumlah.toLocaleString("id-ID")}</span>
                   <span class="waktu">${r.waktu}</span>
                 </div>
                 <div class="keterangan">${r.keterangan}</div>
@@ -195,9 +215,9 @@
             const kekurangan = target - totalTerkumpul;
 
             document.getElementById("terkumpul-text").textContent =
-              "Terkumpul: Rp" + totalTerkumpul.toLocaleString("id-ID");
+              "Rp" + totalTerkumpul.toLocaleString("id-ID");
             document.getElementById("kekurangan-text").textContent =
-              "Kekurangan: " +
+              "" +
               (kekurangan <= 0
                 ? "Selesai 🎉"
                 : "Rp" + kekurangan.toLocaleString("id-ID"));
