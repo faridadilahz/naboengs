@@ -48,17 +48,17 @@ body {
     width: 180px;
     height: 180px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 10px;
     margin-bottom: 20px;
   }
 
   #detail-container h2 {
-    font-size: 28px;
+    font-size: 22px;
     margin-bottom: 8px;
   }
 
   #detail-container p {
-    font-size: 16px;
+    font-size: 18px;
     margin-bottom: 8px;
   }
 
@@ -68,27 +68,40 @@ body {
     margin-bottom: 6px;
   }
 
-  /* Tabel Terkumpul dan Kekurangan */
-  .detail-table {
-    margin-top: 20px;
-    width: 100%;
-    max-width: 500px;
-    margin-inline: auto;
-    border-collapse: collapse;
-    color: #eee;
-    font-size: 14px;
+  .flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0;
+    gap: 8px;
   }
 
-  .detail-table th,
-  .detail-table td {
+  .info-box:not(:last-child) {
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .info-box {
+    flex: 1;
+    text-align: center;
     padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  .detail-table th {
-    color: #aaaaaa;
-    font-weight: 600;
+  .info-box .label {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  .info-box .value {
+    font-size: 18px;
+  }
+
+  #terkumpul-text {
+    color: #00ff00;
+  }
+
+  #kekurangan-text {
+    color: #ff0000;
   }
 
   /* Tombol Tambah */
@@ -139,9 +152,9 @@ body {
     height: 100dvh;
     max-width: 500px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    overflow-y: auto;
-    margin: auto; /* Tengah vertikal + horizontal */
-    height: auto; /* Jangan 100dvh, biar ukurannya fleksibel */
+    overflow-y: hidden;
+    margin: auto;
+    height: auto;
     max-height: 90vh;
     border-bottom: 7px solid #234123;
     transition: all 0.3s;
@@ -150,6 +163,7 @@ body {
   #popup-transaksi h3 {
     font-size: 28px;
     margin-bottom: 20px;
+    text-align: center;
   }
 
   .radio-group {
@@ -176,6 +190,7 @@ body {
     font-size: 16px;
     color: #ffffff;
   }
+
   .radio-option input[type="radio"] {
     accent-color: #00ff00;
     width: 16px;
@@ -205,14 +220,29 @@ body {
   .simpan-container {
     display: flex;
     justify-content: center;
+    gap: 15px;
   }
 
-  #popup-transaksi button {
+  #simpan-transaksi {
     font-family: "Inter", sans-serif;
     width: auto;
     padding: 10px 10px;
     color: #ffffff;
     background: #389138;
+    border: none;
+    border-radius: 6px;
+    margin-left: 4px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 19px;
+  }
+
+  #batal-transaksi {
+    font-family: "Inter", sans-serif;
+    width: auto;
+    padding: 10px 20px;
+    color: #ffffff;
+    background: #ff0000;
     border: none;
     border-radius: 6px;
     margin-left: 4px;
@@ -230,7 +260,7 @@ body {
     text-align: center;
     margin-bottom: 12px;
     margin-top: 24px;
-    font-size: 24px;
+    font-size: 22px;
     color: #ffffff;
   }
 
@@ -240,59 +270,55 @@ body {
   }
 
   #riwayat-list li {
-    font-size: 19px;
     padding: 8px 12px;
-    border-bottom: 1px solid #444;
-    color: #ccc;
   }
 
-  /* Riwayat Container *
+  /* Riwayat List */
+  #riwayat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
-/* Riwayat List */
-#riwayat-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+  .riwayat-item {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    font-family: "Inter", sans-serif;
+  }
 
-.riwayat-item {
-  background: #ffffff;
-  border-radius: 10px;
-  padding: 12px 16px;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.10);
-  font-family: 'Inter', sans-serif;
-}
+  /* Tambah (warna hijau) */
+  .riwayat-item.tambah .nominal {
+    color: #219653;
+    font-weight: 600;
+  }
 
-/* Tambah (warna hijau) */
-.riwayat-item.tambah .nominal {
-  color: #219653;
-  font-weight: 600;
-}
+  /* Kurang (warna merah) */
+  .riwayat-item.kurang .nominal {
+    color: #ff0000;
+    font-weight: 600;
+  }
 
-/* Kurang (warna merah) */
-.riwayat-item.kurang .nominal {
-  color: #ff0000;
-  font-weight: 600;
-}
+  /* Baris atas: nominal dan waktu */
+  .riwayat-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
 
-/* Baris atas: nominal dan waktu */
-.riwayat-top {
-  display: flex;
-  justify-content: space-between;
-  font-size: 16px;
-  margin-bottom: 6px;
-}
+  /* Keterangan */
+  .keterangan {
+    font-size: 18px;
+    color: #555;
+    font-family: "Inter", sans-serif;
+    font-style: italic;
+  }
 
-/* Keterangan */
-.keterangan {
-  font-size: 15px;
-  color: #555;
-  font-family: "Inter", sans-serif;
-  font-style: italic;
-}
-
-.riwayat-item .waktu {
-  color: #555;
-}
+  .riwayat-item .waktu {
+    color: #555;
+    font-size: 18px;
+  }
 }
