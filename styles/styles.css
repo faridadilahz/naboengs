@@ -23,25 +23,6 @@ body {
   padding: 50px 30px;
 }
 
-.logo {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  margin-top: 5px;
-}
-
-.logo img {
-  width: 40px;
-  height: auto;
-  margin-left: 0px;
-  z-index: 100;
-}
-
-.menu-icon {
-  font-size: 22px;
-  color: white;
-}
-
 /* Responsive: max 768px (HP) */
 @media screen and (max-width: 768px) {
   #loader-overlay {
@@ -83,11 +64,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 60px 30px;
+    padding: 40px 50px;
+    position: relative;
   }
 
   .logo {
-    position: absolute;
     display: flex;
     align-items: center;
     margin-top: 5px;
@@ -96,10 +77,37 @@ body {
   .logo img {
     width: 80px;
     height: auto;
-    margin-left: 0px;
     z-index: 100;
   }
 
+  .account ion-icon {
+  font-size: 60px; /* Ukuran icon akun */
+  color: #ffb823; /* Warna icon */
+  cursor: pointer;
+}
+
+#account-popup {
+  position: absolute;
+  top: 60px;
+  right: 120px;
+  background: #fff;
+  color: #000;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: 150px;
+  z-index: 999;
+}
+
+#account-popup p {
+  margin: 0;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.hidden {
+  display: none;
+}
   .menu-icon {
     font-size: 20px;
   }
