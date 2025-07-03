@@ -31,6 +31,12 @@
       <div class="logo">
         <img src="img/logo transparent 512.png" alt="Logo" />
       </div>
+      <div class="account">
+        <ion-icon name="person-circle-outline"></ion-icon>
+      </div>
+      <div id="account-popup" class="hidden">
+        <p id="uid-text">UID: -</p>
+      </div>
     </nav>
 
     <section id="tabs">
@@ -109,6 +115,34 @@
         if (user) {
           uid = user.uid;
           loadData(uid);
+        }
+      });
+
+      const accountIcon = document.querySelector(".account ion-icon");
+      const accountPopup = document.getElementById("account-popup");
+      const uidText = document.getElementById("uid-text");
+
+      // Toggle popup saat icon diklik
+      accountIcon.addEventListener("click", () => {
+        accountPopup.classList.toggle("hidden");
+      });
+
+      // Tutup popup kalau klik di luar
+      document.addEventListener("click", (event) => {
+        const isClickInside =
+          accountIcon.contains(event.target) ||
+          accountPopup.contains(event.target);
+        if (!isClickInside) {
+          accountPopup.classList.add("hidden");
+        }
+      });
+
+      // Masukkan UID dari Firebase Auth
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          uidText.textContent = user.uid;
+        } else {
+          uidText.textContent = "Belum login";
         }
       });
 
