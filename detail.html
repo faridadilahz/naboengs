@@ -22,6 +22,12 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   </head>
   <body>
+    <div id="loader-overlay">
+  <div class="spinner"></div>
+  <span>Bentar, lagi disiapin...</span>
+</div>
+
+
     <nav class="navbar">
       <button onclick="history.back()" class="back-btn">
         <ion-icon name="chevron-back-outline"></ion-icon>
@@ -57,6 +63,38 @@
       <button class="floating-button" id="open-transaksi">
         <ion-icon name="create-outline"></ion-icon>
       </button>
+
+      <section id="edit-tab" class="tab form popup">
+  <div class="popup-content">
+    <div class="popup-header">
+      <button id="close-edit">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+    </div>
+    <div class="form-container">
+      <label>Gambar Sekarang</label>
+      <img id="edit-preview-img" src="" alt="Gambar Saat Ini" style="width:100%; border-radius:8px; margin-bottom:10px;" />
+      
+      <label for="edit-image-upload">Ganti Gambar</label>
+      <input type="file" id="edit-image-upload" accept="image/*" />
+      
+      <label for="edit-nama">Nama Barang</label>
+      <input type="text" id="edit-nama" placeholder="Masukkan Nama" />
+      
+      <label for="edit-target">Target Tabungan</label>
+      <input type="text" id="edit-target" placeholder="Masukkan Target" />
+      
+      <label for="edit-perhari">Tabungan Perhari</label>
+      <input type="text" id="edit-perhari" placeholder="Masukkan Nominal Tabungan" />
+    </div>
+    <div class="simpan-container">
+      <button id="simpan-edit">Simpan</button>
+    </div>
+  </div>
+</section>
+
+
+
     </main>
 
     <section id="popup-transaksi" class="popup">
@@ -137,6 +175,90 @@
             "Rp" + Number(data.perhari).toLocaleString("id-ID") + "/hari";
         });
       }
+
+      const editBtn = document.querySelector(".edit-button");
+const popupEdit = document.getElementById("edit-tab");
+const closeEditBtn = document.getElementById("close-edit");
+const simpanEditBtn = document.getElementById("simpan-edit");
+const previewImg = document.getElementById("edit-preview-img");
+const imageInput = document.getElementById("edit-image-upload");
+
+// Saat klik Edit
+editBtn.addEventListener("click", () => {
+  db.ref(`tabungan/${uid}/${id}`).once("value", (snapshot) => {
+    const data = snapshot.val();
+    document.getElementById("edit-nama").value = data.nama;
+    document.getElementById("edit-target").value = formatRupiah(data.target.toString());
+    document.getElementById("edit-perhari").value = formatRupiah(data.perhari.toString());
+    previewImg.src = data.gambar; // Tampilkan gambar lama
+  });
+  popupEdit.classList.add("show");
+});
+
+// Preview gambar baru saat dipilih
+imageInput.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewImg.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Tutup popup edit
+closeEditBtn.addEventListener("click", () => {
+  popupEdit.classList.remove("show");
+});
+
+// Simpan perubahan
+simpanEditBtn.addEventListener("click", () => {
+  const namaBaru = document.getElementById("edit-nama").value.trim();
+  const targetBaru = parseInt(parseRupiah(document.getElementById("edit-target").value));
+  const perhariBaru = parseInt(parseRupiah(document.getElementById("edit-perhari").value));
+  const gambarBaru = imageInput.files[0];
+
+  if (!namaBaru || !targetBaru || !perhariBaru) {
+    alert("Semua field harus diisi!");
+    return;
+  }
+
+  // Update gambar jika user upload baru
+  if (gambarBaru) {
+    const storageRef = firebase.storage().ref(`tabungan/${uid}/${id}`);
+    storageRef.put(gambarBaru).then(() => {
+      storageRef.getDownloadURL().then((url) => {
+        updateTabungan(namaBaru, targetBaru, perhariBaru, url);
+      });
+    });
+  } else {
+    // Jika gambar tidak diubah
+    db.ref(`tabungan/${uid}/${id}`).once("value", (snapshot) => {
+      const gambarLama = snapshot.val().gambar;
+      updateTabungan(namaBaru, targetBaru, perhariBaru, gambarLama);
+    });
+  }
+});
+
+function updateTabungan(nama, target, perhari, gambarUrl) {
+  const updateData = { nama, target, perhari, gambar: gambarUrl };
+
+  db.ref(`tabungan/${uid}/${id}`).update(updateData)
+    .then(() => {
+      alert("Data berhasil diupdate!");
+      popupEdit.classList.remove("show");
+      loadDetail(); // Refresh detail
+    })
+    .catch((err) => {
+      alert("Gagal update: " + err.message);
+    });
+}
+
+// Setup input format rupiah
+setupRupiahInput("edit-target");
+setupRupiahInput("edit-perhari");
+
 
       // Fungsi tombol hapus
       const deleteBtn = document.querySelector(".delete-button");
@@ -282,6 +404,12 @@
       function parseRupiah(str) {
         return str.replace(/[^\d]/g, "");
       }
+
+      setTimeout(() => {
+        const loader = document.getElementById("loader-overlay");
+        loader.style.opacity = 0;
+        loader.style.display = "none";
+      }, 2500);
     </script>
   </body>
 </html>
