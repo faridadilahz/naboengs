@@ -26,6 +26,16 @@
       <button onclick="history.back()" class="back-btn">
         <ion-icon name="chevron-back-outline"></ion-icon>
       </button>
+      <div id="tools-button" class="tools-container">
+        <div class="edit-button">
+          <ion-icon name="pencil-outline"></ion-icon>
+          <span>Edit</span>
+        </div>
+        <div class="delete-button">
+          <ion-icon name="trash-outline"></ion-icon>
+          <span>Hapus</span>
+        </div>
+      </div>
     </nav>
 
     <main id="detail-container">
@@ -128,6 +138,29 @@
         });
       }
 
+      // Fungsi tombol hapus
+      const deleteBtn = document.querySelector(".delete-button");
+
+      deleteBtn.addEventListener("click", () => {
+        const konfirmasi = confirm("Yakin ingin menghapus tabungan ini?");
+        if (konfirmasi) {
+          db.ref(`tabungan/${uid}/${id}`)
+            .remove()
+            .then(() => {
+              alert("Tabungan berhasil dihapus.");
+              window.location.href = "index.html";
+            })
+            .then(() => {
+              return db.ref(`riwayat/${uid}/${id}`).remove();
+            })
+
+            .catch((err) => {
+              alert("Gagal menghapus: " + err.message);
+            });
+        }
+      });
+
+      // Popup transaksi
       const popup = document.getElementById("popup-transaksi");
       const openBtn = document.getElementById("open-transaksi");
       const simpanBtn = document.getElementById("simpan-transaksi");
@@ -237,7 +270,6 @@
         }
         return "Rp " + rupiah + (split[1] ? "," + split[1] : "");
       }
-
       function setupRupiahInput(id) {
         const input = document.getElementById(id);
         input.addEventListener("input", (e) => {
