@@ -231,6 +231,111 @@ body {
     cursor: pointer;
     font-size: 19px;
   }
+
+  .riwayat-popup {
+  -webkit-tap-highlight-color: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100dvh;
+  background: #00000099; /* overlay gelap transparan */
+  backdrop-filter: blur(4px);
+  display: none !important; /* default sembunyi */
+  align-items: center; /* vertikal center */
+  justify-content: center; /* horizontal center */
+  z-index: 999;
+}
+
+.riwayat-popup.show {
+  display: flex !important; /* Tampilkan kalau ada class .show */
+}
+
+.riwayat-popup .popup-riwayat {
+  -webkit-tap-highlight-color: transparent;
+  background: #1f1f1f;
+  padding: 30px 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  max-height: 90vh; /* supaya tidak overflow */
+  border-bottom: 7px solid #234123;
+  transition: all 0.3s ease;
+}
+
+#detail-nominal {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+#detail-keterangan {
+  color: #ccc;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+#detail-tanggal {
+  color: #888;
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#tutup-riwayat {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+#tutup-riwayat ion-icon {
+  font-size: 36px;
+}
+
+/* Tombol ubah & hapus */
+.choice-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.choice-container .edit-button,
+.choice-container .delete-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.choice-container .edit-button {
+  background: #234123;
+  color: #fff;
+  font-size: 19px;
+}
+
+.choice-container .delete-button {
+  background: #a10000;
+  color: #fff;
+  font-size: 19px;
+}
+
+.choice-container ion-icon {
+  font-size: 25px;
+}
+
   /* Container Utama Detail */
   #detail-container {
     margin-top: 30px;
