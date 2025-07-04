@@ -24,10 +24,9 @@
   </head>
   <body>
     <div id="loader-overlay">
-  <div class="spinner"></div>
-  <span>Bentar, lagi disiapin...</span>
-</div>
-
+      <div class="spinner"></div>
+      <span>Bentar ya, lagi disiapin...</span>
+    </div>
 
     <nav class="navbar">
       <button onclick="history.back()" class="back-btn">
@@ -66,36 +65,42 @@
       </button>
 
       <section id="edit-tab" class="tab form popup">
-  <div class="popup-content">
-    <div class="popup-header">
-      <button id="close-edit">
-        <ion-icon name="chevron-back-outline"></ion-icon>
-      </button>
-    </div>
-    <div class="form-container">
-      <label>Gambar Sekarang</label>
-      <img id="edit-preview-img" src="" alt="Gambar Saat Ini" style="width:100%; border-radius:8px; margin-bottom:10px;" />
-      
-      <label for="edit-image-upload">Ganti Gambar</label>
-      <input type="file" id="edit-image-upload" accept="image/*" />
-      
-      <label for="edit-nama">Nama Barang</label>
-      <input type="text" id="edit-nama" placeholder="Masukkan Nama" />
-      
-      <label for="edit-target">Target Tabungan</label>
-      <input type="text" id="edit-target" placeholder="Masukkan Target" />
-      
-      <label for="edit-perhari">Tabungan Perhari</label>
-      <input type="text" id="edit-perhari" placeholder="Masukkan Nominal Tabungan" />
-    </div>
-    <div class="simpan-container">
-      <button id="simpan-edit">Simpan</button>
-    </div>
-  </div>
-</section>
+        <div class="popup-content">
+          <div class="popup-header">
+            <button id="close-edit">
+              <ion-icon name="chevron-back-outline"></ion-icon>
+            </button>
+          </div>
+          <div class="form-container">
+            <label>Gambar</label>
+            <img
+              id="edit-preview-img"
+              src=""
+              alt="Gambar Saat Ini"
+              style="width: 100%; border-radius: 8px; margin-bottom: 10px"
+            />
 
+            <label for="edit-image-upload">Ganti Gambar</label>
+            <input type="file" id="edit-image-upload" accept="image/*" />
 
+            <label for="edit-nama">Nama Barang</label>
+            <input type="text" id="edit-nama" placeholder="Masukkan Nama" />
 
+            <label for="edit-target">Target Tabungan</label>
+            <input type="text" id="edit-target" placeholder="Masukkan Target" />
+
+            <label for="edit-perhari">Tabungan Perhari</label>
+            <input
+              type="text"
+              id="edit-perhari"
+              placeholder="Masukkan Nominal Tabungan"
+            />
+          </div>
+          <div class="simpan-container">
+            <button id="simpan-edit">Simpan</button>
+          </div>
+        </div>
+      </section>
     </main>
 
     <section id="popup-transaksi" class="popup">
@@ -118,6 +123,27 @@
         <div class="simpan-container">
           <button id="simpan-transaksi">Simpan</button>
           <button id="batal-transaksi">Batal</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="popup-detail-riwayat" class="riwayat-popup">
+      <div class="popup-riwayat">
+        <button id="tutup-riwayat">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </button>
+        <h3 id="detail-nominal"></h3>
+        <p id="detail-keterangan"></p>
+        <p id="detail-tanggal"></p>
+        <div id="choice-button" class="choice-container">
+          <div id="ubah-riwayat" class="edit-button">
+            <ion-icon name="pencil-outline"></ion-icon>
+            <span>Ubah</span>
+          </div>
+          <div id="hapus-riwayat" class="delete-button">
+            <ion-icon name="trash-outline"></ion-icon>
+            <span>Hapus</span>
+          </div>
         </div>
       </div>
     </section>
@@ -178,94 +204,93 @@
       }
 
       const editBtn = document.querySelector(".edit-button");
-const popupEdit = document.getElementById("edit-tab");
-const closeEditBtn = document.getElementById("close-edit");
-const simpanEditBtn = document.getElementById("simpan-edit");
-const previewImg = document.getElementById("edit-preview-img");
-const imageInput = document.getElementById("edit-image-upload");
+      const popupEdit = document.getElementById("edit-tab");
+      const closeEditBtn = document.getElementById("close-edit");
+      const simpanEditBtn = document.getElementById("simpan-edit");
+      const previewImg = document.getElementById("edit-preview-img");
+      const imageInput = document.getElementById("edit-image-upload");
 
-// Saat klik Edit
-editBtn.addEventListener("click", () => {
-  db.ref(`tabungan/${uid}/${id}`).once("value", (snapshot) => {
-    const data = snapshot.val();
-    document.getElementById("edit-nama").value = data.nama;
-    document.getElementById("edit-target").value = formatRupiah(data.target.toString());
-    document.getElementById("edit-perhari").value = formatRupiah(data.perhari.toString());
-    previewImg.src = data.gambar; // Tampilkan gambar lama
-  });
-  popupEdit.classList.add("show");
-});
-
-// Preview gambar baru saat dipilih
-imageInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      previewImg.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-// Tutup popup edit
-closeEditBtn.addEventListener("click", () => {
-  popupEdit.classList.remove("show");
-});
-
-// Simpan perubahan
-simpanEditBtn.addEventListener("click", () => {
-  const namaBaru = document.getElementById("edit-nama").value.trim();
-  const targetBaru = parseInt(parseRupiah(document.getElementById("edit-target").value));
-  const perhariBaru = parseInt(parseRupiah(document.getElementById("edit-perhari").value));
-  const gambarBaru = imageInput.files[0];
-
-  if (!namaBaru || !targetBaru || !perhariBaru) {
-    alert("Semua field harus diisi!");
-    return;
-  }
-
-  // Update gambar jika user upload baru
-  if (gambarBaru) {
-    const storageRef = firebase.storage().ref(`tabungan/${uid}/${id}`);
-    storageRef.put(gambarBaru).then(() => {
-      storageRef.getDownloadURL().then((url) => {
-        updateTabungan(namaBaru, targetBaru, perhariBaru, url);
+      // Saat klik Edit
+      editBtn.addEventListener("click", () => {
+        db.ref(`tabungan/${uid}/${id}`).once("value", (snapshot) => {
+          const data = snapshot.val();
+          document.getElementById("edit-nama").value = data.nama;
+          document.getElementById("edit-target").value = formatRupiah(
+            data.target.toString()
+          );
+          document.getElementById("edit-perhari").value = formatRupiah(
+            data.perhari.toString()
+          );
+          previewImg.src = data.gambar; // Tampilkan gambar lama
+        });
+        popupEdit.classList.add("show");
       });
-    });
-  } else {
-    // Jika gambar tidak diubah
-    db.ref(`tabungan/${uid}/${id}`).once("value", (snapshot) => {
-      const gambarLama = snapshot.val().gambar;
-      updateTabungan(namaBaru, targetBaru, perhariBaru, gambarLama);
-    });
-  }
-});
 
-storageRef.put(gambarBaru)
-  .then(() => storageRef.getDownloadURL())
-  .then((url) => updateTabungan(namaBaru, targetBaru, perhariBaru, url))
-  .catch(err => alert("Gagal upload: " + err.message))
-  .finally(() => loader.style.display = "none");
+      // Preview gambar baru saat dipilih
+      imageInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            previewImg.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
 
-function updateTabungan(nama, target, perhari, gambarUrl) {
-  const updateData = { nama, target, perhari, gambar: gambarUrl };
+      // Tutup popup edit
+      closeEditBtn.addEventListener("click", () => {
+        popupEdit.classList.remove("show");
+      });
 
-  db.ref(`tabungan/${uid}/${id}`).update(updateData)
-    .then(() => {
-      alert("Data berhasil diupdate!");
-      popupEdit.classList.remove("show");
-      loadDetail(); // Refresh detail
-    })
-    .catch((err) => {
-      alert("Gagal update: " + err.message);
-    });
-}
+      // Simpan perubahan
+      simpanEditBtn.addEventListener("click", () => {
+        const namaBaru = document.getElementById("edit-nama").value.trim();
+        const targetStr = document.getElementById("edit-target").value;
+        const perhariStr = document.getElementById("edit-perhari").value;
 
-// Setup input format rupiah
-setupRupiahInput("edit-target");
-setupRupiahInput("edit-perhari");
+        const targetBaru = parseInt(targetStr.replace(/[^\d]/g, ""));
+        const perhariBaru = parseInt(perhariStr.replace(/[^\d]/g, ""));
+        const gambarBaru = imageInput.files[0];
 
+        if (!namaBaru || !targetBaru || !perhariBaru) {
+          alert("Semua field harus diisi!");
+          return;
+        }
+
+        if (gambarBaru) {
+          const reader = new FileReader();
+          reader.onloadend = function () {
+            const gambarBase64 = reader.result; // Konversi ke base64
+            updateTabungan(namaBaru, targetBaru, perhariBaru, gambarBase64);
+          };
+          reader.readAsDataURL(gambarBaru);
+        } else {
+          db.ref(`tabungan/${uid}/${id}`).once("value", (snapshot) => {
+            const gambarLama = snapshot.val().gambar;
+            updateTabungan(namaBaru, targetBaru, perhariBaru, gambarLama);
+          });
+        }
+      });
+
+      function updateTabungan(nama, target, perhari, gambarUrl) {
+        const updateData = { nama, target, perhari, gambar: gambarUrl };
+
+        db.ref(`tabungan/${uid}/${id}`)
+          .update(updateData)
+          .then(() => {
+            alert("Data berhasil diupdate!");
+            popupEdit.classList.remove("show");
+            loadDetail(); // Refresh detail
+          })
+          .catch((err) => {
+            alert("Gagal update: " + err.message);
+          });
+      }
+
+      // Setup input format rupiah
+      setupRupiahInput("edit-target");
+      setupRupiahInput("edit-perhari");
 
       // Fungsi tombol hapus
       const deleteBtn = document.querySelector(".delete-button");
@@ -313,11 +338,16 @@ setupRupiahInput("edit-perhari");
         const jumlah = parseInt(
           parseRupiah(document.getElementById("jumlah").value)
         );
-        const keterangan = document.getElementById("keterangan").value.trim();
-        if (!jumlah || !keterangan) return alert("Lengkapi dulu ya");
+        const keterangan = document.getElementById("keterangan").value.trim(); // Boleh kosong
+
+        if (!jumlah) return alert("Masukkan nominal dulu ya!");
 
         const waktu = new Date().toLocaleString("id-ID");
-        const riwayat = { jenis, jumlah, keterangan, waktu };
+        const riwayat = { jenis, jumlah, waktu }; // Tanpa keterangan
+
+        if (keterangan) {
+          riwayat.keterangan = keterangan; // Tambahkan jika ada
+        }
 
         db.ref(`riwayat/${uid}/${id}`)
           .push(riwayat)
@@ -334,29 +364,131 @@ setupRupiahInput("edit-perhari");
         const list = document.getElementById("riwayat-list");
         list.innerHTML = "";
         const riwayatRef = db.ref(`riwayat/${uid}/${id}`);
+
         riwayatRef.on("value", (snapshot) => {
           list.innerHTML = "";
           snapshot.forEach((child) => {
             const r = child.val();
+            const key = child.key; // Ambil key untuk edit/hapus
             const li = document.createElement("li");
+
             li.innerHTML = `
-              <div class="riwayat-item ${r.jenis}">
-                <div class="riwayat-top">
-                  <span class="nominal">${
-                    r.jenis === "tambah" ? "+" : "-"
-                  }Rp${r.jumlah.toLocaleString("id-ID")}</span>
-                  <span class="waktu">${r.waktu}</span>
-                </div>
-                <div class="keterangan">${r.keterangan}</div>
-              </div>
-            `;
+        <div class="riwayat-item ${r.jenis}">
+          <div class="riwayat-top">
+            <span class="nominal">${
+              r.jenis === "tambah" ? "+" : "-"
+            }Rp${r.jumlah.toLocaleString("id-ID")}</span>
+            <span class="waktu">${r.waktu}</span>
+          </div>
+          ${r.keterangan ? `<div class="keterangan">${r.keterangan}</div>` : ""}
+        </div>
+      `;
+
+            li.addEventListener("click", () => {
+              // Isi popup detail
+              document.getElementById("detail-nominal").textContent = `${
+                r.jenis === "tambah" ? "+" : "-"
+              }Rp${r.jumlah.toLocaleString("id-ID")}`;
+              document.getElementById("detail-keterangan").textContent =
+                r.keterangan ? r.keterangan : "(Tidak ada keterangan)";
+              document.getElementById("detail-tanggal").textContent = r.waktu;
+
+              // Simpan key untuk ubah/hapus
+              document
+                .getElementById("ubah-riwayat")
+                .setAttribute("data-key", key);
+              document
+                .getElementById("hapus-riwayat")
+                .setAttribute("data-key", key);
+
+              // Tampilkan popup
+              document
+                .getElementById("popup-detail-riwayat")
+                .classList.add("show");
+            });
+
             list.prepend(li);
           });
 
-          // Panggil update total setelah memuat riwayat
           updateTerkumpulDanKekurangan();
         });
       }
+
+      const popupDetailRiwayat = document.getElementById(
+        "popup-detail-riwayat"
+      );
+      const ubahRiwayatBtn = document.getElementById("ubah-riwayat");
+      const hapusRiwayatBtn = document.getElementById("hapus-riwayat");
+      const tutupRiwayatBtn = document.getElementById("tutup-riwayat");
+
+      tutupRiwayatBtn.onclick = () => {
+        popupDetailRiwayat.classList.remove("show");
+      };
+
+      hapusRiwayatBtn.onclick = () => {
+        const key = hapusRiwayatBtn.getAttribute("data-key");
+        const konfirmasi = confirm("Yakin ingin menghapus transaksi ini?");
+        if (konfirmasi) {
+          db.ref(`riwayat/${uid}/${id}/${key}`)
+            .remove()
+            .then(() => {
+              alert("Riwayat berhasil dihapus");
+              popupDetailRiwayat.classList.remove("show");
+              loadRiwayat();
+            });
+        }
+      };
+
+      ubahRiwayatBtn.onclick = () => {
+        const key = ubahRiwayatBtn.getAttribute("data-key");
+
+        // Ambil data lama
+        db.ref(`riwayat/${uid}/${id}/${key}`).once("value", (snapshot) => {
+          const data = snapshot.val();
+
+          // Tampilkan di form transaksi untuk edit
+          document.querySelector(
+            `input[name="jenis"][value="${data.jenis}"]`
+          ).checked = true;
+          document.getElementById("jumlah").value = formatRupiah(
+            data.jumlah.toString()
+          );
+          document.getElementById("keterangan").value = data.keterangan || "";
+
+          // Setelah edit, replace data lama
+          simpanBtn.onclick = () => {
+            const jenis = document.querySelector(
+              'input[name="jenis"]:checked'
+            ).value;
+            const jumlah = parseInt(
+              parseRupiah(document.getElementById("jumlah").value)
+            );
+            const keterangan = document
+              .getElementById("keterangan")
+              .value.trim();
+
+            if (!jumlah) return alert("Masukkan nominal dulu ya!");
+
+            const waktu = new Date().toLocaleString("id-ID");
+            const updatedRiwayat = { jenis, jumlah, waktu };
+
+            if (keterangan) updatedRiwayat.keterangan = keterangan;
+
+            db.ref(`riwayat/${uid}/${id}/${key}`)
+              .set(updatedRiwayat)
+              .then(() => {
+                alert("Riwayat berhasil diubah!");
+                popup.classList.remove("show");
+                popupDetailRiwayat.classList.remove("show");
+                loadRiwayat();
+              });
+          };
+
+          // Tampilkan popup transaksi
+          popup.classList.add("show");
+          popupDetailRiwayat.classList.remove("show");
+        });
+      };
 
       function updateTerkumpulDanKekurangan() {
         const riwayatRef = db.ref(`riwayat/${uid}/${id}`);
