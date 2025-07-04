@@ -242,9 +242,6 @@ simpanEditBtn.addEventListener("click", () => {
   }
 });
 
-      const loader = document.getElementById("loader-overlay");
-loader.style.display = "flex";
-
 storageRef.put(gambarBaru)
   .then(() => storageRef.getDownloadURL())
   .then((url) => updateTabungan(namaBaru, targetBaru, perhariBaru, url))
