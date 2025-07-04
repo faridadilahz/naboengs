@@ -242,7 +242,14 @@ simpanEditBtn.addEventListener("click", () => {
   }
 });
 
-      
+      const loader = document.getElementById("loader-overlay");
+loader.style.display = "flex";
+
+storageRef.put(gambarBaru)
+  .then(() => storageRef.getDownloadURL())
+  .then((url) => updateTabungan(namaBaru, targetBaru, perhariBaru, url))
+  .catch(err => alert("Gagal upload: " + err.message))
+  .finally(() => loader.style.display = "none");
 
 function updateTabungan(nama, target, perhari, gambarUrl) {
   const updateData = { nama, target, perhari, gambar: gambarUrl };
