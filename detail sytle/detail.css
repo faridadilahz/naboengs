@@ -9,17 +9,6 @@
   overflow-x: hidden;
 }
 
-body {@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-
-/* Reset & Global */
-* {
-  -webkit-tap-highlight-color: transparent;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
 body {
   font-family: "Inter", sans-serif;
   background-color: #1a1a19;
@@ -28,29 +17,70 @@ body {
 }
 
 @media screen and (max-width: 768px) {
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+
   /* Tombol Kembali */
   .back-btn {
-    margin-left: 20px;
-    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: none;
     border: none;
     color: #ffffff;
+    margin-top: 20px;
+    margin-left: 20px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
+    transition: all 0.3s;
   }
 
   .back-btn ion-icon {
     font-size: 50px;
+    vertical-align: middle;
     transition: all 0.3s;
   }
 
-  .back-btn ion-icon:hover {
-    font-size: 40px;
+  .back-btn:hover ion-icon {
+    transform: scale(0.8);
+  }
+
+  .tools-container {
+    margin-top: 20px;
+    margin-right: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  .edit-button,
+  .delete-button {
+    display: inline-flex; /* bikin flex biar isi rata tengah */
+    align-items: center; /* icon + teks sejajar vertikal */
+    gap: 8px;
+    font-size: 22px;
+    font-family: "Inter", sans-serif;
+    padding: 10px 14px;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .edit-button ion-icon,
+  .delete-button ion-icon {
+    font-size: 22px;
+    vertical-align: middle;
   }
 
   /* Container Utama Detail */
   #detail-container {
+    margin-top: 20px;
     padding: 20px;
     text-align: center;
   }
@@ -317,319 +347,6 @@ body {
     display: flex;
     justify-content: space-between;
     font-size: 20px;
-    margin-bottom: 6px;
-  }
-
-  /* Keterangan */
-  .keterangan {
-    font-size: 18px;
-    color: #555;
-    font-family: "Inter", sans-serif;
-    font-style: italic;
-  }
-
-  .riwayat-item .waktu {
-    color: #555;
-    font-size: 18px;
-  }
-}
-
-  font-family: "Inter", sans-serif;
-  background-color: #1a1a19;
-  color: #ffffff;
-  min-height: 100vh;
-}
-
-@media screen and (max-width: 768px) {
-  /* Tombol Kembali */
-  .back-btn {
-    margin-left: 20px;
-    margin-top: 20px;
-    background: none;
-    border: none;
-    color: #ffffff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
-
-  .back-btn ion-icon {
-    font-size: 50px;
-    transition: all 0.3s;
-  }
-
-  .back-btn ion-icon:hover {
-    font-size: 40px;
-  }
-
-  /* Container Utama Detail */
-  #detail-container {
-    padding: 20px;
-    text-align: center;
-  }
-
-  #detail-container img {
-    width: 180px;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 20px;
-  }
-
-  #detail-container h2 {
-    font-size: 22px;
-    margin-bottom: 8px;
-  }
-
-  #detail-container p {
-    font-size: 18px;
-    margin-bottom: 8px;
-  }
-
-  #detail-container .detail-value {
-    font-size: 16px;
-    color: #cccccc;
-    margin-bottom: 6px;
-  }
-
-  .flex-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 40px 0;
-    gap: 8px;
-  }
-
-  .info-box:not(:last-child) {
-    border-right: 1px solid #e0e0e0;
-  }
-
-  .info-box {
-    flex: 1;
-    text-align: center;
-    padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .info-box .label {
-    font-size: 14px;
-    margin-bottom: 5px;
-  }
-
-  .info-box .value {
-    font-size: 18px;
-  }
-
-  #terkumpul-text {
-    color: #00ff00;
-  }
-
-  #kekurangan-text {
-    color: #ff0000;
-  }
-
-  /* Tombol Tambah */
-  .floating-button {
-    position: fixed;
-    right: clamp(15px, 4vw, 20px);
-    bottom: clamp(15px, 4vw, 20px);
-    background: #234123;
-    border: none;
-    border-radius: 30%;
-    width: clamp(60px, 15vw, 90px);
-    height: clamp(60px, 15vw, 90px);
-    color: #ffffff;
-    font-size: clamp(24px, 6vw, 40px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: clamp(6px, 2vw, 16px);
-    margin-top: clamp(6px, 2vw, 16px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    cursor: pointer;
-  }
-
-  /* Popup Transaksi */
-  #popup-transaksi {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100dvh;
-    background: #00000099;
-    backdrop-filter: blur(4px);
-    display: none;
-    align-items: center; /* Vertikal center */
-    justify-content: center; /* Horizontal center */
-    z-index: 999;
-  }
-
-  #popup-transaksi.show {
-    display: flex;
-  }
-
-  #popup-transaksi .popup-content {
-    background: #1f1f1f;
-    padding: 30px 20px;
-    border-radius: 12px;
-    width: 100%;
-    height: 100dvh;
-    max-width: 500px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    overflow-y: hidden;
-    margin: auto;
-    height: auto;
-    max-height: 90vh;
-    border-bottom: 7px solid #234123;
-    transition: all 0.3s;
-  }
-
-  #popup-transaksi h3 {
-    font-size: 28px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  .radio-group {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 12px;
-  }
-
-  .radio-option {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #2d2d2d;
-    padding: 5px 72px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    text-align: center;
-    color: #333;
-  }
-
-  .radio-option span {
-    font-size: 16px;
-    color: #ffffff;
-  }
-
-  .radio-option input[type="radio"] {
-    accent-color: #00ff00;
-    width: 16px;
-    height: 16px;
-  }
-
-  #popup-transaksi label {
-    font-weight: 600;
-    font-size: 24px;
-    display: block;
-    margin-bottom: 6px;
-  }
-
-  #popup-transaksi input,
-  #popup-transaksi select {
-    font-family: "Inter", sans-serif;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    border: 1px solid #444;
-    background: #2c2c2c;
-    color: #fff;
-    font-size: 19px;
-  }
-
-  .simpan-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-  }
-
-  #simpan-transaksi {
-    font-family: "Inter", sans-serif;
-    width: auto;
-    padding: 10px 10px;
-    color: #ffffff;
-    background: #389138;
-    border: none;
-    border-radius: 6px;
-    margin-left: 4px;
-    margin-top: 20px;
-    cursor: pointer;
-    font-size: 19px;
-  }
-
-  #batal-transaksi {
-    font-family: "Inter", sans-serif;
-    width: auto;
-    padding: 10px 20px;
-    color: #ffffff;
-    background: #ff0000;
-    border: none;
-    border-radius: 6px;
-    margin-left: 4px;
-    margin-top: 20px;
-    cursor: pointer;
-    font-size: 19px;
-  }
-
-  /* Riwayat Transaksi */
-  #riwayat-container {
-    padding: 20px;
-  }
-
-  #riwayat-container h3 {
-    text-align: center;
-    margin-bottom: 12px;
-    margin-top: 24px;
-    font-size: 22px;
-    color: #ffffff;
-  }
-
-  #riwayat-list {
-    list-style: none;
-    padding: 0;
-  }
-
-  #riwayat-list li {
-    padding: 8px 12px;
-  }
-
-  /* Riwayat List */
-  #riwayat-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .riwayat-item {
-    background: #ffffff;
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin-bottom: 10px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-    font-family: "Inter", sans-serif;
-  }
-
-  /* Tambah (warna hijau) */
-  .riwayat-item.tambah .nominal {
-    color: #219653;
-    font-weight: 600;
-  }
-
-  /* Kurang (warna merah) */
-  .riwayat-item.kurang .nominal {
-    color: #ff0000;
-    font-weight: 600;
-  }
-
-  /* Baris atas: nominal dan waktu */
-  .riwayat-top {
-    display: flex;
-    justify-content: space-between;
-    font-size: 24px;
     margin-bottom: 6px;
   }
 
