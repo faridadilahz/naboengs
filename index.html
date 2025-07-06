@@ -208,20 +208,31 @@
         const file = document.getElementById("image-upload").files[0];
 
         if (!uid) return alert("Belum login, refresh halaman.");
-        if (!nama || !target || !perhari || !file) {
+        if (!nama || !target || !perhari) {
           return alert("Lengkapi semua data dulu ya!");
         }
 
-        getImageBase64(file, (base64) => {
-          const newRef = db.ref("tabungan/" + uid).push();
-          const key = newRef.key;
-          const data = { nama, target, perhari, gambar: base64 };
-          newRef.set(data).then(() => {
-            alert("Tersimpan!");
-            closePopup();
+        if (file) {
+          // Jika user pilih gambar, ubah ke base64
+          getImageBase64(file, (base64) => {
+            simpanData(nama, target, perhari, base64);
           });
-        });
+        } else {
+          // Jika user tidak pilih gambar, gunakan gambar abu-abu
+          const grayPlaceholder =
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAYAAAB34tZnAAAAHGlET1QAAAACAAAAAAAAAAcAAAAoAAAABwAAAKAAAAAHAAAAoAAAAFh9RhgAAAAnSURBVHja7cExAQAAAMKg9U9tCF8gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPALFwABFOEEtQAAAABJRU5ErkJggg==";
+          simpanData(nama, target, perhari, grayPlaceholder);
+        }
       });
+
+      function simpanData(nama, target, perhari, gambarBase64) {
+        const newRef = db.ref("tabungan/" + uid).push();
+        const data = { nama, target, perhari, gambar: gambarBase64 };
+        newRef.set(data).then(() => {
+          alert("Tersimpan!");
+          closePopup();
+        });
+      }
 
       function tampilkanData(data, key) {
         const list = document.getElementById("data-list");
