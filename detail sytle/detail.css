@@ -60,7 +60,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 40px;
   }
 
   /* Tombol Kembali */
@@ -72,7 +72,6 @@ body {
     border: none;
     color: #ffffff;
     margin-top: 30px;
-    margin-left: 20px;
     cursor: pointer;
     transition: all 0.3s;
   }
@@ -88,7 +87,6 @@ body {
   }
 
   .tools-container {
-    margin-right: 20px;
     display: flex;
     justify-content: center;
     gap: 15px;
@@ -233,108 +231,108 @@ body {
   }
 
   .riwayat-popup {
-  -webkit-tap-highlight-color: transparent;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100dvh;
-  background: #00000099; /* overlay gelap transparan */
-  backdrop-filter: blur(4px);
-  display: none !important; /* default sembunyi */
-  align-items: center; /* vertikal center */
-  justify-content: center; /* horizontal center */
-  z-index: 999;
-}
+    -webkit-tap-highlight-color: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    background: #00000099; /* overlay gelap transparan */
+    backdrop-filter: blur(4px);
+    display: none !important; /* default sembunyi */
+    align-items: center; /* vertikal center */
+    justify-content: center; /* horizontal center */
+    z-index: 999;
+  }
 
-.riwayat-popup.show {
-  display: flex !important; /* Tampilkan kalau ada class .show */
-}
+  .riwayat-popup.show {
+    display: flex !important; /* Tampilkan kalau ada class .show */
+  }
 
-.riwayat-popup .popup-riwayat {
-  -webkit-tap-highlight-color: transparent;
-  background: #1f1f1f;
-  padding: 30px 20px;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  overflow-y: auto;
-  max-height: 90vh; /* supaya tidak overflow */
-  border-bottom: 7px solid #234123;
-  transition: all 0.3s ease;
-}
+  .riwayat-popup .popup-riwayat {
+    -webkit-tap-highlight-color: transparent;
+    background: #1f1f1f;
+    padding: 30px 20px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    max-height: 90vh; /* supaya tidak overflow */
+    border-bottom: 7px solid #234123;
+    transition: all 0.3s ease;
+  }
 
-#detail-nominal {
-  color: #fff;
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 10px;
-  text-align: center;
-}
+  #detail-nominal {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+  }
 
-#detail-keterangan {
-  color: #ccc;
-  margin-bottom: 8px;
-  text-align: center;
-}
+  #detail-keterangan {
+    color: #ccc;
+    margin-bottom: 8px;
+    text-align: center;
+  }
 
-#detail-tanggal {
-  color: #888;
-  font-size: 16px;
-  margin-bottom: 20px;
-  text-align: center;
-}
+  #detail-tanggal {
+    color: #888;
+    font-size: 16px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
 
-#tutup-riwayat {
-  background: none;
-  border: none;
-  color: #ffffff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
+  #tutup-riwayat {
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
 
-#tutup-riwayat ion-icon {
-  font-size: 36px;
-}
+  #tutup-riwayat ion-icon {
+    font-size: 36px;
+  }
 
-/* Tombol ubah & hapus */
-.choice-container {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 20px;
-}
+  /* Tombol ubah & hapus */
+  .choice-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+  }
 
-.choice-container .edit-button,
-.choice-container .delete-button {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 0;
-  border-radius: 8px;
-  cursor: pointer;
-}
+  .choice-container .edit-button,
+  .choice-container .delete-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 0;
+    border-radius: 8px;
+    cursor: pointer;
+  }
 
-.choice-container .edit-button {
-  background: #234123;
-  color: #fff;
-  font-size: 19px;
-}
+  .choice-container .edit-button {
+    background: #234123;
+    color: #fff;
+    font-size: 19px;
+  }
 
-.choice-container .delete-button {
-  background: #a10000;
-  color: #fff;
-  font-size: 19px;
-}
+  .choice-container .delete-button {
+    background: #a10000;
+    color: #fff;
+    font-size: 19px;
+  }
 
-.choice-container ion-icon {
-  font-size: 25px;
-}
+  .choice-container ion-icon {
+    font-size: 25px;
+  }
 
   /* Container Utama Detail */
   #detail-container {
@@ -361,9 +359,8 @@ body {
     margin-bottom: 8px;
   }
 
-  #detail-container .detail-value {
+  #detail-container .value {
     font-size: 16px;
-    color: #cccccc;
     margin-bottom: 6px;
   }
 
@@ -373,17 +370,26 @@ body {
     align-items: center;
     margin: 40px 70px;
     gap: 8px;
+    position: relative; /* Tambahkan ini untuk garis tengah */
   }
 
-  .info-box:not(:last-child) {
-    border-right: 1px solid #e0e0e0;
+  /* Garis pemisah di tengah */
+  .flex-row::before {
+    content: "";
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 80%;
+    background-color: #444;
+    z-index: 1;
   }
 
   .info-box {
     flex: 1;
     text-align: center;
     padding: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .info-box .label {
@@ -459,6 +465,12 @@ body {
     transition: all 0.3s;
   }
 
+  .popup-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
   #popup-transaksi h3 {
     font-size: 28px;
     margin-bottom: 20px;
@@ -477,8 +489,9 @@ body {
     align-items: center;
     gap: 8px;
     background: #2d2d2d;
-    padding: 5px 72px;
+    padding: 5px 10px;
     border-radius: 12px;
+    flex: 1;
     cursor: pointer;
     font-weight: 600;
     text-align: center;
@@ -492,8 +505,8 @@ body {
 
   .radio-option input[type="radio"] {
     accent-color: #00ff00;
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
   }
 
   #popup-transaksi label {
@@ -619,5 +632,486 @@ body {
   .riwayat-item .waktu {
     color: #555;
     font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  #loader-overlay span {
+    font-size: 20px;
+    color: #ffb823;
+    text-align: center;
+  }
+
+  .spinner {
+    border: 6px solid #444;
+    border-top: 6px solid #ffb823;
+    border-radius: 40%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin-bottom: 40px;
+  }
+
+  .back-btn ion-icon {
+    font-size: 40px;
+    vertical-align: middle;
+    transition: all 0.3s;
+  }
+
+  .tools-container {
+    gap: 5px;
+  }
+
+  .edit-button,
+  .delete-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-family: "Inter", sans-serif;
+    padding: 10px 16px;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .edit-button ion-icon,
+  .delete-button ion-icon {
+    font-size: 20px;
+    vertical-align: middle;
+  }
+
+  #detail-container {
+    margin-top: 30px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  #detail-container img {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  #detail-container h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  #detail-container p {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  #detail-container .value {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 70px;
+    gap: 8px;
+    position: relative;
+  }
+
+  .flex-row::before {
+    content: "";
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 80%;
+    background-color: #444;
+    z-index: 1;
+  }
+
+  #riwayat-container h3 {
+    text-align: center;
+    margin-bottom: 12px;
+    margin-top: 24px;
+    font-size: 20px;
+    color: #ffffff;
+  }
+
+  #riwayat-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  #riwayat-list li {
+    padding: 8px 12px;
+  }
+
+  /* Riwayat List */
+  #riwayat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .riwayat-item {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    font-family: "Inter", sans-serif;
+  }
+
+  /* Tambah (warna hijau) */
+  .riwayat-item.tambah .nominal {
+    color: #219653;
+    font-weight: 600;
+  }
+
+  /* Kurang (warna merah) */
+  .riwayat-item.kurang .nominal {
+    color: #ff0000;
+    font-weight: 600;
+  }
+
+  /* Baris atas: nominal dan waktu */
+  .riwayat-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  /* Keterangan */
+  .keterangan {
+    font-size: 16px;
+    color: #555;
+    font-family: "Inter", sans-serif;
+    font-style: italic;
+  }
+
+  .riwayat-item .waktu {
+    color: #555;
+    font-size: 14px;
+  }
+
+  #popup-transaksi {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    background: #00000099;
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center; /* Vertikal center */
+    justify-content: center; /* Horizontal center */
+    z-index: 999;
+  }
+
+  #popup-transaksi.show {
+    display: flex;
+  }
+
+  #popup-transaksi .popup-content {
+    background: #1f1f1f;
+    padding: 30px 20px;
+    border-radius: 12px;
+    width: 90%;
+    height: 100dvh;
+    max-width: 500px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    overflow-y: hidden;
+    margin: auto;
+    height: auto;
+    max-height: 90vh;
+    border-bottom: 7px solid #234123;
+    transition: all 0.3s;
+  }
+
+  #popup-transaksi h3 {
+    font-size: 26px;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .radio-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 12px;
+  }
+
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #2d2d2d;
+    padding: 5px 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    text-align: center;
+    color: #333;
+  }
+
+  .radio-option span {
+    font-size: 14px;
+    color: #ffffff;
+  }
+
+  .radio-option input[type="radio"] {
+    accent-color: #00ff00;
+    width: 16px;
+    height: 16px;
+  }
+
+  #popup-transaksi label {
+    font-weight: 600;
+    font-size: 24px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  #popup-transaksi input,
+  #popup-transaksi select {
+    font-family: "Inter", sans-serif;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: #2c2c2c;
+    color: #fff;
+    font-size: 15px;
+  }
+
+  .simpan-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+
+  #simpan-transaksi {
+    font-family: "Inter", sans-serif;
+    width: auto;
+    padding: 10px 10px;
+    color: #ffffff;
+    background: #389138;
+    border: none;
+    border-radius: 6px;
+    margin-left: 4px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  #batal-transaksi {
+    font-family: "Inter", sans-serif;
+    width: auto;
+    padding: 10px 20px;
+    color: #ffffff;
+    background: #ff0000;
+    border: none;
+    border-radius: 6px;
+    margin-left: 4px;
+    margin-top: 20px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  #close-edit ion-icon {
+    font-size: 30px;
+    transition: all 0.3s;
+  }
+
+  .popup {
+    -webkit-tap-highlight-color: transparent;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100dvh;
+    background: #00000099;
+    backdrop-filter: blur(4px);
+    display: none !important;
+    align-items: center; /* Vertikal center */
+    justify-content: center; /* Horizontal center */
+    z-index: 999;
+  }
+
+  .popup-content {
+    -webkit-tap-highlight-color: transparent;
+    background: #1f1f1f;
+    padding: 30px 20px;
+    border-radius: 12px;
+    width: 100%;
+    height: 100dvh;
+    max-width: 400px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    overflow-y: hidden;
+    margin: auto;
+    height: auto;
+    max-height: 90vh;
+    border-bottom: 7px solid #234123;
+  }
+
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-container label {
+    font-weight: 600;
+    font-size: 24px;
+    color: #ffffff;
+    text-align: left;
+  }
+
+  .form-container input {
+    font-family: "Inter", sans-serif;
+    padding: 10px;
+    border: 1px solid #234123;
+    border-radius: 8px;
+    background: #2c2c2c;
+    color: #fff;
+    font-size: 15px;
+    transition: all 0.5s;
+  }
+
+  .form-container input:focus {
+    border: 1px solid #357a38;
+  }
+
+  #simpan-button {
+    font-family: "Inter", sans-serif;
+    width: auto;
+    padding: 10px 10px;
+    color: #ffffff;
+    background: #357a38;
+    border: none;
+    border-radius: 6px;
+    margin-left: 4px;
+    margin-top: 40px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #loader-overlay span {
+    font-size: 18px;
+    color: #ffb823;
+    text-align: center;
+  }
+
+  .spinner {
+    border: 6px solid #444;
+    border-top: 6px solid #ffb823;
+    border-radius: 40%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    margin-bottom: 40px;
+  }
+
+  .back-btn ion-icon {
+    font-size: 30px;
+    vertical-align: middle;
+    transition: all 0.3s;
+  }
+
+  .tools-container {
+    gap: 5px;
+  }
+
+  .edit-button,
+  .delete-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-family: "Inter", sans-serif;
+    padding: 10px 16px;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .edit-button ion-icon,
+  .delete-button ion-icon {
+    font-size: 18px;
+    vertical-align: middle;
+  }
+
+  .flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0;
+    gap: 8px;
+    position: relative;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  #loader-overlay span {
+    font-size: 16px;
+    color: #ffb823;
+    text-align: center;
+  }
+
+  .spinner {
+    border: 6px solid #444;
+    border-top: 6px solid #ffb823;
+    border-radius: 40%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    margin-bottom: 40px;
+  }
+
+  .back-btn ion-icon {
+    font-size: 25px;
+    vertical-align: middle;
+    transition: all 0.3s;
+  }
+
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .edit-button,
+  .delete-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-family: "Inter", sans-serif;
+    padding: 10px 16px;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 40px 0;
+    gap: 8px;
+    position: relative;
   }
 }
