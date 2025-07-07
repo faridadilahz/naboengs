@@ -92,7 +92,7 @@ body {
 
   #account-popup p {
     margin: 0;
-    font-size: 12px;
+    font-size: 14px;
     word-break: break-all;
   }
 
@@ -118,12 +118,12 @@ body {
     color: #888888;
     text-align: center;
     cursor: pointer;
-    font-size: 19px;
+    font-size: 16px;
     font-family: "Inter", sans-serif;
   }
 
   .tab.active {
-    border-bottom: 3px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
     color: #ffffff;
     font-weight: bold;
   }
@@ -132,27 +132,32 @@ body {
     margin-bottom: 2px;
     vertical-align: middle;
     margin-right: 6px;
-    font-size: 19px;
+    font-size: 16px;
   }
 
   #add-button {
     position: fixed;
-    right: clamp(15px, 4vw, 20px);
-    bottom: clamp(15px, 4vw, 20px);
+    right: 20px;
+    bottom: 20px;
     background: #357a38;
     border: none;
     border-radius: 30%;
-    width: clamp(60px, 15vw, 90px);
-    height: clamp(60px, 15vw, 90px);
+    width: 90px;
+    height: 90px;
     color: #ffffff;
-    font-size: clamp(24px, 6vw, 40px);
+    font-size: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: clamp(6px, 2vw, 16px);
-    margin-top: clamp(6px, 2vw, 16px);
+    margin-bottom: 16px;
+    margin-top: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  #add-button:hover {
+    transform: scale(0.90);
   }
 
   .tab.form {
