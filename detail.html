@@ -76,7 +76,6 @@
             <img
               id="edit-preview-img"
               src=""
-              alt="Gambar Saat Ini"
               style="width: 100%; border-radius: 8px; margin-bottom: 10px"
             />
 
@@ -227,12 +226,11 @@
           document.getElementById("edit-perhari").value = formatRupiah(
             data.perhari.toString()
           );
-          previewImg.src = data.gambar; // Tampilkan gambar lama
+          previewImg.src = data.gambar;
         });
         popupEdit.classList.add("show");
       });
 
-      // Preview gambar baru saat dipilih
       imageInput.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -285,7 +283,7 @@
         db.ref(`tabungan/${uid}/${id}`)
           .update(updateData)
           .then(() => {
-            alert("Data berhasil diupdate!");
+            alert("Data berhasil diperbarui!");
             popupEdit.classList.remove("show");
             loadDetail(); // Refresh detail
           })
@@ -302,7 +300,7 @@
       const deleteBtn = document.querySelector(".delete-button");
 
       deleteBtn.addEventListener("click", () => {
-        const konfirmasi = confirm("Yakin ingin menghapus tabungan ini?");
+        const konfirmasi = confirm("Kamu yakin ingin menghapus tabungan ini?");
         if (konfirmasi) {
           db.ref(`tabungan/${uid}/${id}`)
             .remove()
@@ -358,10 +356,10 @@
         db.ref(`riwayat/${uid}/${id}`)
           .push(riwayat)
           .then(() => {
-            alert("Tersimpan!");
+            popup.classList.remove("show");
             document.getElementById("jumlah").value = "";
             document.getElementById("keterangan").value = "";
-            popup.classList.remove("show");
+
             loadRiwayat();
           });
       };
@@ -375,7 +373,7 @@
           list.innerHTML = "";
           snapshot.forEach((child) => {
             const r = child.val();
-            const key = child.key; // Ambil key untuk edit/hapus
+            const key = child.key;
             const li = document.createElement("li");
 
             li.innerHTML = `
@@ -396,7 +394,7 @@
                 r.jenis === "tambah" ? "+" : "-"
               }Rp${r.jumlah.toLocaleString("id-ID")}`;
               document.getElementById("detail-keterangan").textContent =
-                r.keterangan ? r.keterangan : "(Tidak ada keterangan)";
+                r.keterangan ? r.keterangan : "";
               document.getElementById("detail-tanggal").textContent = r.waktu;
 
               // Simpan key untuk ubah/hapus
@@ -433,7 +431,7 @@
 
       hapusRiwayatBtn.onclick = () => {
         const key = hapusRiwayatBtn.getAttribute("data-key");
-        const konfirmasi = confirm("Yakin ingin menghapus transaksi ini?");
+        const konfirmasi = confirm("Kamu yakin ingin menghapus nominal ini?");
         if (konfirmasi) {
           db.ref(`riwayat/${uid}/${id}/${key}`)
             .remove()
