@@ -283,7 +283,6 @@
         db.ref(`tabungan/${uid}/${id}`)
           .update(updateData)
           .then(() => {
-            alert("Data berhasil diperbarui!");
             popupEdit.classList.remove("show");
             loadDetail(); // Refresh detail
           })
@@ -431,12 +430,11 @@
 
       hapusRiwayatBtn.onclick = () => {
         const key = hapusRiwayatBtn.getAttribute("data-key");
-        const konfirmasi = confirm("Kamu yakin ingin menghapus nominal ini?");
+        const konfirmasi = confirm("Kamu yakin ingin menghapus transaksi ini?");
         if (konfirmasi) {
           db.ref(`riwayat/${uid}/${id}/${key}`)
             .remove()
             .then(() => {
-              alert("Riwayat berhasil dihapus");
               popupDetailRiwayat.classList.remove("show");
               loadRiwayat();
             });
@@ -481,7 +479,6 @@
             db.ref(`riwayat/${uid}/${id}/${key}`)
               .set(updatedRiwayat)
               .then(() => {
-                alert("Riwayat berhasil diubah!");
                 popup.classList.remove("show");
                 popupDetailRiwayat.classList.remove("show");
                 loadRiwayat();
