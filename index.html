@@ -28,9 +28,6 @@
     </div>
 
     <nav class="navbar">
-      <div class="logo">
-        <img src="img/logo transparent 512.png" alt="Logo" />
-      </div>
       <div class="account">
         <ion-icon name="person-circle-outline"></ion-icon>
       </div>
@@ -116,6 +113,23 @@
           uid = user.uid;
           loadData(uid);
         }
+      });
+
+      const tabs = document.querySelectorAll("#tabs .tab");
+      const list = document.getElementById("data-list");
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+
+          // Filter data
+          const selesai = index === 1;
+          list.querySelectorAll(".tabungan-item").forEach((item) => {
+            const isSelesai = item.dataset.selesai === "true";
+            item.style.display = selesai === isSelesai ? "flex" : "none";
+          });
+        });
       });
 
       const accountIcon = document.querySelector(".account ion-icon");
@@ -229,7 +243,6 @@
         const newRef = db.ref("tabungan/" + uid).push();
         const data = { nama, target, perhari, gambar: gambarBase64 };
         newRef.set(data).then(() => {
-          alert("Tersimpan!");
           closePopup();
         });
       }
@@ -245,7 +258,6 @@
         const target = Number(data.target);
         const perhari = Number(data.perhari);
 
-        // 🔥 Ambil data riwayat untuk hitung terkumpul
         db.ref(`riwayat/${uid}/${key}`).once("value", (snapshot) => {
           let terkumpul = 0;
           snapshot.forEach((child) => {
@@ -255,26 +267,30 @@
           });
 
           const sisa = target - terkumpul;
+
+          item.dataset.selesai = sisa <= 0; // ✅ Tambahkan dataset selesai
+
           const estimasiHari =
             perhari > 0 ? Math.max(1, Math.ceil(sisa / perhari)) : "-";
 
           item.innerHTML = `
-            <img src="${data.gambar}" alt="${data.nama}" />
-            <div class="tabungan-info">
-              <span class="nama">${data.nama}</span>
-              <span class="target">Rp${target.toLocaleString("id-ID")}</span>
-              <span class="perhari">Rp${perhari.toLocaleString(
-                "id-ID"
-              )}/hari</span>
-              <ul class="estimasi-wrapper">
-                <div class="estimasi-container">
-                  <span class="estimasi-hari">${estimasiHari} hari lagi</span>
-                </div>
-              </ul>
-            </div>
-          `;
+      <img src="${data.gambar}" alt="${data.nama}" />
+      <div class="tabungan-info">
+        <span class="nama">${data.nama}</span>
+        <span class="target">Rp${target.toLocaleString("id-ID")}</span>
+        <span class="perhari">Rp${perhari.toLocaleString("id-ID")}/hari</span>
+        <ul class="estimasi-wrapper">
+          <div class="estimasi-container">
+            <span class="estimasi-hari">${estimasiHari} hari lagi</span>
+          </div>
+        </ul>
+      </div>
+    `;
 
           list.prepend(item);
+
+          // ✅ Setelah item masuk DOM, filter ulang
+          filterTabAktif();
         });
       }
 
@@ -292,7 +308,38 @@
             snapshot.forEach((child) => {
               tampilkanData(child.val(), child.key);
             });
+
+            // ✅ Setelah semua item ditampilkan, jalankan filter tab aktif
+            filterTabAktif();
           }
+        });
+      }
+
+      // ✅ Tambahkan fungsi ini di luar:
+      function filterTabAktif() {
+        const activeTab = document.querySelector("#tabs .tab.active");
+        const selesai = activeTab.textContent.includes("Selesai");
+        const list = document.getElementById("data-list");
+        tabs.forEach((tab, index) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("active"));
+            tab.classList.add("active");
+            filterTabAktif(); // ✅ Panggil filter
+          });
+        });
+
+        list.querySelectorAll(".tabungan-item").forEach((item) => {
+          const isSelesai = item.dataset.selesai === "true";
+          item.style.display = selesai === isSelesai ? "flex" : "none";
+        });
+      }
+
+      function filterTabAktif() {
+        const activeTab = document.querySelector("#tabs .tab.active");
+        const selesai = activeTab.textContent.includes("Selesai");
+        list.querySelectorAll(".tabungan-item").forEach((item) => {
+          const isSelesai = item.dataset.selesai === "true";
+          item.style.display = selesai === isSelesai ? "flex" : "none";
         });
       }
 
