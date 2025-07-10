@@ -105,7 +105,7 @@ body {
 
   .tab {
     flex: 1;
-    padding: 12px 0;
+    padding: 18px 0;
     background: none;
     border: none;
     color: #888888;
@@ -152,6 +152,10 @@ body {
 
   #add-button:hover {
     transform: scale(0.9);
+  }
+
+  .hidden {
+    display: none !important;
   }
 
   .tab.form {
@@ -212,10 +216,10 @@ body {
     max-width: 500px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     overflow-y: hidden;
-    margin: auto; /* Tengah vertikal + horizontal */
-    height: auto; /* Jangan 100dvh, biar ukurannya fleksibel */
+    margin: auto;
+    height: auto;
     max-height: 90vh;
-    border-bottom: 7px solid #234123;
+    border-bottom: 7px solid #357a38;
   }
 
   .popup.show {
@@ -317,11 +321,12 @@ body {
   }
 
   .tabungan-item img {
-    width: 25%;
+    width: 100px; /* ✅ Width fix */
+    flex-shrink: 0; /* ✅ Supaya dia gak mengecil saat container dipaksa sempit */
     aspect-ratio: 1/1;
     object-fit: cover;
     border-radius: 8px;
-    margin-right: 12px;
+    margin-right: 5px;
   }
 
   .tabungan-info {
@@ -336,22 +341,22 @@ body {
 
   .nama {
     font-weight: 900;
-    font-size: 16px;
+    font-size: 19px;
   }
 
   .target {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .perhari {
     margin-bottom: clamp(6px, 2vw, 10px);
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .estimasi-hari {
     color: #444;
     margin-top: clamp(6px, 1.5vw, 10px);
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .estimasi-wrapper {
@@ -366,5 +371,53 @@ body {
   .estimasi-container {
     display: flex;
     justify-content: center;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  #add-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #357a38;
+    border: none;
+    border-radius: 30%;
+    width: 80px;
+    height: 80px;
+    color: #ffffff;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    margin-top: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 100;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  #add-button {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #357a38;
+    border: none;
+    border-radius: 30%;
+    width: 70px;
+    height: 70px;
+    color: #ffffff;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    margin-top: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 100;
   }
 }
