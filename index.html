@@ -21,7 +21,7 @@
   <body>
     <div id="loader-overlay">
       <img
-        src="img/logo transparent 512.png"
+        src="img/naboengslogotransparent512.png"
         alt="Logo Naboengs"
         class="loader-logo"
       />
@@ -118,6 +118,8 @@
       const tabs = document.querySelectorAll("#tabs .tab");
       const list = document.getElementById("data-list");
 
+      const addButton = document.getElementById("add-button"); // ✅ Tombol tambah
+
       tabs.forEach((tab, index) => {
         tab.addEventListener("click", () => {
           tabs.forEach((t) => t.classList.remove("active"));
@@ -128,6 +130,17 @@
           list.querySelectorAll(".tabungan-item").forEach((item) => {
             const isSelesai = item.dataset.selesai === "true";
             item.style.display = selesai === isSelesai ? "flex" : "none";
+          });
+
+          // ✅ Sembunyikan tombol kalau tab Selesai aktif
+          if (selesai) {
+            addButton.style.display = "none";
+          } else {
+            addButton.style.display = "flex"; // atau block sesuai CSS
+          }
+
+          list.querySelectorAll(".perhari").forEach((el) => {
+            el.style.visibility = selesai ? "hidden" : "visible";
           });
         });
       });
