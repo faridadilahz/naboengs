@@ -21,7 +21,7 @@
   <body>
     <div id="loader-overlay">
       <img
-        src="img/naboengslogotransparent512.png"
+        src="img/logonaboengstransparent512.png"
         alt="Logo Naboengs"
         class="loader-logo"
       />
@@ -29,7 +29,25 @@
 
     <nav class="navbar">
       <div class="account">
-        <ion-icon name="person-circle-outline"></ion-icon>
+        <svg>
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop
+                offset="0%"
+                style="stop-color: #eeeeee; stop-opacity: 1"
+              ></stop>
+              <stop
+                offset="100%"
+                style="stop-color: #ffb823; stop-opacity: 1"
+              ></stop>
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <ion-icon
+          name="person-circle-sharp"
+          style="fill: url(#gradient)"
+        ></ion-icon>
       </div>
       <div id="account-popup" class="hidden">
         <p id="uid-text">UID: -</p>
