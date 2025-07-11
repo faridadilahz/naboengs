@@ -8,6 +8,7 @@
 }
 
 body {
+  -webkit-tap-highlight-color: transparent;
   font-family: "Inter", sans-serif;
   background-color: #1a1a19;
   color: #ffffff;
@@ -52,22 +53,35 @@ body {
 
   .navbar {
     background-image: url("../img/mainheadernaboengs.jpg");
-    background-size: cover; /* supaya gambar memenuhi area navbar */
+    background-size: cover;
     background-position: center;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center; /* isi navbar rata tengah horizontal */
+    align-items: center; /* isi navbar rata tengah vertical */
     padding: 60px 50px;
     position: relative;
   }
 
+  .account svg {
+    width: 0;
+    height: 0;
+    position: absolute;
+  }
+
+  .account {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .account ion-icon {
-    font-size: 45px; /* Ukuran icon akun */
-    color: #ffffff; /* Warna icon */
+    font-size: 45px;
     cursor: pointer;
     position: absolute;
     right: 40px;
-    top: 40px;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
   }
 
   #account-popup {
