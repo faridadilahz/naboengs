@@ -452,83 +452,106 @@
         "popup-detail-riwayat"
       );
       const ubahRiwayatBtn = document.getElementById("ubah-riwayat");
-      const hapusRiwayatBtn = document.getElementById("hapus-riwayat");
-      const tutupRiwayatBtn = document.getElementById("tutup-riwayat");
+const hapusRiwayatBtn = document.getElementById("hapus-riwayat");
+const tutupRiwayatBtn = document.getElementById("tutup-riwayat");
 
-      tutupRiwayatBtn.onclick = () => {
-        popupDetailRiwayat.classList.remove("show");
-
-      if (location.hash === "#detail") history.back();
+// ✅ Tutup popup detail riwayat
+tutupRiwayatBtn.onclick = () => {
+  popupDetailRiwayat.classList.remove("show");
+  if (location.hash === "#editRiwayat") history.back();
 };
 
-      hapusRiwayatBtn.onclick = () => {
-        const key = hapusRiwayatBtn.getAttribute("data-key");
-        const konfirmasi = confirm("Kamu yakin ingin menghapus transaksi ini?");
-        if (konfirmasi) {
-          db.ref(`riwayat/${uid}/${id}/${key}`)
-            .remove()
-            .then(() => {
-              popupDetailRiwayat.classList.remove("show");
-              loadRiwayat();
+// ✅ Hapus riwayat
+hapusRiwayatBtn.onclick = () => {
+  const key = hapusRiwayatBtn.getAttribute("data-key");
+  const konfirmasi = confirm("Kamu yakin ingin menghapus transaksi ini?");
+  if (konfirmasi) {
+    db.ref(`riwayat/${uid}/${id}/${key}`)
+      .remove()
+      .then(() => {
+        popupDetailRiwayat.classList.remove("show");
+        loadRiwayat();
 
-              if (location.hash === "#detail") history.back();
-            });
-        }
-      };
+        if (location.hash === "#editRiwayat") history.back();
+      });
+  }
+};
 
-      ubahRiwayatBtn.onclick = () => {
-        const key = ubahRiwayatBtn.getAttribute("data-key");
+// ✅ Ubah riwayat
+ubahRiwayatBtn.onclick = () => {
+  const key = ubahRiwayatBtn.getAttribute("data-key");
 
-        // Ambil data lama
-        db.ref(`riwayat/${uid}/${id}/${key}`).once("value", (snapshot) => {
-          const data = snapshot.val();
+  // Ambil data lama
+  db.ref(`riwayat/${uid}/${id}/${key}`).once("value", (snapshot) => {
+    const data = snapshot.val();
 
-          // Tampilkan di form transaksi untuk edit
-          document.querySelector(
-            `input[name="jenis"][value="${data.jenis}"]`
-          ).checked = true;
-          document.getElementById("jumlah").value = formatRupiah(
-            data.jumlah.toString()
-          );
-          document.getElementById("keterangan").value = data.keterangan || "";
+    // Tampilkan di form transaksi untuk edit
+    document.querySelector(
+      `input[name="jenis"][value="${data.jenis}"]`
+    ).checked = true;
+    document.getElementById("jumlah").value = formatRupiah(
+      data.jumlah.toString()
+    );
+    document.getElementById("keterangan").value = data.keterangan || "";
 
-          // Setelah edit, replace data lama
-          simpanBtn.onclick = () => {
-            const jenis = document.querySelector(
-              'input[name="jenis"]:checked'
-            ).value;
-            const jumlah = parseInt(
-              parseRupiah(document.getElementById("jumlah").value)
-            );
-            const keterangan = document
-              .getElementById("keterangan")
-              .value.trim();
+    // Hapus listener lama biar ga dobel
+    simpanBtn.replaceWith(simpanBtn.cloneNode(true));
+    const newSimpanBtn = document.getElementById("simpan-transaksi");
 
-            if (!jumlah) return alert("Masukkan nominal dulu ya!");
+    // ✅ Simpan perubahan
+    newSimpanBtn.onclick = () => {
+      const jenis = document.querySelector(
+        'input[name="jenis"]:checked'
+      ).value;
+      const jumlah = parseInt(
+        parseRupiah(document.getElementById("jumlah").value)
+      );
+      const keterangan = document
+        .getElementById("keterangan")
+        .value.trim();
 
-            const waktu = new Date().toLocaleString("id-ID");
-            const updatedRiwayat = { jenis, jumlah, waktu };
+      if (!jumlah) return alert("Masukkan nominal dulu ya!");
 
-            if (keterangan) updatedRiwayat.keterangan = keterangan;
+      const waktu = new Date().toLocaleString("id-ID");
+      const updatedRiwayat = { jenis, jumlah, waktu };
 
-            db.ref(`riwayat/${uid}/${id}/${key}`)
-              .set(updatedRiwayat)
-              .then(() => {
-                popup.classList.remove("show");
-                popupDetailRiwayat.classList.remove("show");
-                loadRiwayat();
+      if (keterangan) updatedRiwayat.keterangan = keterangan;
 
-                if (location.hash === "#editRiwayat") history.back();
-              });
-          };
-
-          // Tampilkan popup transaksi
-          popup.classList.add("show");
+      db.ref(`riwayat/${uid}/${id}/${key}`)
+        .set(updatedRiwayat)
+        .then(() => {
+          popup.classList.remove("show");
           popupDetailRiwayat.classList.remove("show");
+          loadRiwayat();
 
-          history.pushState({ popupEditRiwayat: true }, "", "#editRiwayat");
+          if (location.hash === "#editRiwayat") history.back();
         });
-      };
+    };
+
+    // Tampilkan popup transaksi untuk edit
+    popup.classList.add("show");
+    popupDetailRiwayat.classList.remove("show");
+
+    // ✅ Push state supaya tombol back nutup popup edit riwayat
+    history.pushState({ popupEditRiwayat: true }, "", "#editRiwayat");
+  });
+};
+
+// ✅ Handle tombol back bawaan device
+window.addEventListener("popstate", () => {
+  if (popup.classList.contains("show")) {
+    popup.classList.remove("show");
+    document.getElementById("jumlah").value = "";
+    document.getElementById("keterangan").value = "";
+  }
+  if (popupEdit.classList.contains("show")) {
+    popupEdit.classList.remove("show");
+  }
+  if (popupDetailRiwayat.classList.contains("show")) {
+    popupDetailRiwayat.classList.remove("show");
+  }
+});
+
 
       function updateTerkumpulDanKekurangan() {
         const riwayatRef = db.ref(`riwayat/${uid}/${id}`);
