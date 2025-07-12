@@ -301,22 +301,61 @@
 
           item.dataset.selesai = sisa <= 0; // ✅ Tambahkan dataset selesai
 
-          const estimasiHari =
-            perhari > 0 ? Math.max(1, Math.ceil(sisa / perhari)) : "-";
+          let estimasiHTML = "";
+          function formatTanggalIndo(tanggalStr) {
+            const bulanIndo = [
+              "Januari",
+              "Februari",
+              "Maret",
+              "April",
+              "Mei",
+              "Juni",
+              "Juli",
+              "Agustus",
+              "September",
+              "Oktober",
+              "November",
+              "Desember",
+            ];
+
+            const parts = tanggalStr.split(/[\/\-\s]/); // Biar aman split pakai / - atau spasi
+            const day = parseInt(parts[0]);
+            const month = parseInt(parts[1]) - 1; // Bulan dimulai dari 0
+            const year = parseInt(parts[2]);
+
+            return `${day} ${bulanIndo[month]} ${year}`;
+          }
+
+          if (sisa <= 0) {
+            // ✅ Ambil transaksi terakhir
+            const lastRiwayat = snapshot.val()
+              ? Object.values(snapshot.val()).pop()
+              : null;
+
+            const tanggalFull = lastRiwayat?.waktu || "Tanggal tidak tersedia";
+            const tanggalOnly = tanggalFull.split(" ")[0];
+            const tanggalTercapai = formatTanggalIndo(tanggalOnly);
+
+            estimasiHTML = `<span class="estimasi-hari">Tercapai pada ${tanggalTercapai}</span>`;
+          } else {
+            const estimasiHari =
+              perhari > 0 ? Math.max(1, Math.ceil(sisa / perhari)) : "-";
+            estimasiHTML = `<span class="estimasi-hari">${estimasiHari} hari lagi</span>`;
+          }
 
           item.innerHTML = `
-      <img src="${data.gambar}" alt="${data.nama}" />
-      <div class="tabungan-info">
-        <span class="nama">${data.nama}</span>
-        <span class="target">Rp${target.toLocaleString("id-ID")}</span>
-        <span class="perhari">Rp${perhari.toLocaleString("id-ID")}/hari</span>
-        <ul class="estimasi-wrapper">
-          <div class="estimasi-container">
-            <span class="estimasi-hari">${estimasiHari} hari lagi</span>
-          </div>
-        </ul>
+  <img src="${data.gambar}" alt="${data.nama}" />
+  <div class="tabungan-info">
+    <span class="nama">${data.nama}</span>
+    <span class="target">Rp${target.toLocaleString("id-ID")}</span>
+    <span class="perhari">Rp${perhari.toLocaleString("id-ID")}/hari</span>
+    <ul class="estimasi-wrapper">
+      <div class="estimasi-container">
+        ${estimasiHTML}
       </div>
-    `;
+    </ul>
+  </div>
+`;
 
           list.prepend(item);
 
@@ -346,31 +385,21 @@
         });
       }
 
-      // ✅ Tambahkan fungsi ini di luar:
       function filterTabAktif() {
         const activeTab = document.querySelector("#tabs .tab.active");
         const selesai = activeTab.textContent.includes("Selesai");
-        const list = document.getElementById("data-list");
-        tabs.forEach((tab, index) => {
-          tab.addEventListener("click", () => {
-            tabs.forEach((t) => t.classList.remove("active"));
-            tab.classList.add("active");
-            filterTabAktif(); // ✅ Panggil filter
-          });
-        });
 
         list.querySelectorAll(".tabungan-item").forEach((item) => {
           const isSelesai = item.dataset.selesai === "true";
           item.style.display = selesai === isSelesai ? "flex" : "none";
-        });
-      }
 
-      function filterTabAktif() {
-        const activeTab = document.querySelector("#tabs .tab.active");
-        const selesai = activeTab.textContent.includes("Selesai");
-        list.querySelectorAll(".tabungan-item").forEach((item) => {
-          const isSelesai = item.dataset.selesai === "true";
-          item.style.display = selesai === isSelesai ? "flex" : "none";
+          // ✅ Hide estimasiHari & perhari kalau tab selesai
+          const estimasi = item.querySelector(".estimasi-hari");
+          const perhari = item.querySelector(".perhari");
+          if (estimasi)
+            estimasi.style.visibility = selesai ? "hidden" : "visible";
+          if (perhari)
+            perhari.style.visibility = selesai ? "hidden" : "visible";
         });
       }
 
