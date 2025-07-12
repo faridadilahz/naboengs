@@ -323,15 +323,32 @@
       const simpanBtn = document.getElementById("simpan-transaksi");
       const batalBtn = document.getElementById("batal-transaksi");
 
+      // Handle tombol back untuk popup transaksi
+      window.addEventListener("popstate", (event) => {
+        if (popup.classList.contains("show")) {
+          popup.classList.remove("show");
+          document.getElementById("jumlah").value = "";
+          document.getElementById("keterangan").value = "";
+          // Balikkan history kalau popup masih ada hash
+          if (location.hash === "#popup") history.back();
+        }
+      });
+
       openBtn.onclick = () => {
         popup.classList.add("show");
         setupRupiahInput("jumlah");
+
+        // Push state ke history supaya tombol back bisa close popup
+        history.pushState({ popup: true }, "", "#popup");
       };
 
       batalBtn.onclick = () => {
         popup.classList.remove("show");
         document.getElementById("jumlah").value = "";
         document.getElementById("keterangan").value = "";
+
+        // Balikkan history kalau popup masih ada hash
+        if (location.hash === "#popup") history.back();
       };
 
       simpanBtn.onclick = () => {
