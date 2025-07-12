@@ -457,7 +457,9 @@
 
       tutupRiwayatBtn.onclick = () => {
         popupDetailRiwayat.classList.remove("show");
-      };
+
+      if (location.hash === "#detail") history.back();
+};
 
       hapusRiwayatBtn.onclick = () => {
         const key = hapusRiwayatBtn.getAttribute("data-key");
@@ -468,6 +470,8 @@
             .then(() => {
               popupDetailRiwayat.classList.remove("show");
               loadRiwayat();
+
+              if (location.hash === "#detail") history.back();
             });
         }
       };
@@ -513,12 +517,16 @@
                 popup.classList.remove("show");
                 popupDetailRiwayat.classList.remove("show");
                 loadRiwayat();
+
+                if (location.hash === "#editRiwayat") history.back();
               });
           };
 
           // Tampilkan popup transaksi
           popup.classList.add("show");
           popupDetailRiwayat.classList.remove("show");
+
+          history.pushState({ popupEditRiwayat: true }, "", "#editRiwayat");
         });
       };
 
