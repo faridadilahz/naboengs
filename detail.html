@@ -229,6 +229,9 @@
           previewImg.src = data.gambar;
         });
         popupEdit.classList.add("show");
+
+        // ✅ Tambahkan ini supaya tombol back bisa nutup popup edit
+        history.pushState({ popupEdit: true }, "", "#edit");
       });
 
       imageInput.addEventListener("change", (e) => {
@@ -245,6 +248,9 @@
       // Tutup popup edit
       closeEditBtn.addEventListener("click", () => {
         popupEdit.classList.remove("show");
+
+        // ✅ Tambahkan ini supaya balik history kalau masih ada #edit
+        if (location.hash === "#edit") history.back();
       });
 
       // Simpan perubahan
@@ -274,6 +280,13 @@
             const gambarLama = snapshot.val().gambar;
             updateTabungan(namaBaru, targetBaru, perhariBaru, gambarLama);
           });
+        }
+      });
+
+      // ✅ Handle tombol back bawaan device untuk popup edit
+      window.addEventListener("popstate", (event) => {
+        if (popupEdit.classList.contains("show")) {
+          popupEdit.classList.remove("show");
         }
       });
 
@@ -358,16 +371,14 @@
         const jumlah = parseInt(
           parseRupiah(document.getElementById("jumlah").value)
         );
-        const keterangan = document.getElementById("keterangan").value.trim(); // Boleh kosong
+        const keterangan = document.getElementById("keterangan").value.trim();
 
         if (!jumlah) return alert("Masukkan nominal dulu ya!");
 
-        const waktu = new Date().toLocaleString("id-ID");
-        const riwayat = { jenis, jumlah, waktu }; // Tanpa keterangan
+        const waktu = new Date().toLocaleDateString("id-ID");
 
-        if (keterangan) {
-          riwayat.keterangan = keterangan; // Tambahkan jika ada
-        }
+        const riwayat = { jenis, jumlah, waktu };
+        if (keterangan) riwayat.keterangan = keterangan;
 
         db.ref(`riwayat/${uid}/${id}`)
           .push(riwayat)
@@ -375,6 +386,8 @@
             popup.classList.remove("show");
             document.getElementById("jumlah").value = "";
             document.getElementById("keterangan").value = "";
+
+            if (location.hash === "#popup") history.back();
 
             loadRiwayat();
           });
@@ -397,8 +410,9 @@
           <div class="riwayat-top">
             <span class="nominal">${
               r.jenis === "tambah" ? "+" : "-"
-            }Rp${r.jumlah.toLocaleString("id-ID")}</span>
-            <span class="waktu">${r.waktu}</span>
+            } Rp${r.jumlah.toLocaleString("id-ID")}</span>
+            <span class="waktu">${r.waktu.split(",")[0]}</span>
+
           </div>
           ${r.keterangan ? `<div class="keterangan">${r.keterangan}</div>` : ""}
         </div>
@@ -533,6 +547,19 @@
               (kekurangan <= 0
                 ? "Selesai 🎉"
                 : "Rp" + kekurangan.toLocaleString("id-ID"));
+
+            // ✅ CEK kalau sudah tercapai
+            if (kekurangan <= 0 && !tabungan.tanggalTercapai) {
+              const tanggal = new Date().toLocaleDateString("id-ID");
+              db.ref(`tabungan/${uid}/${id}`).update({
+                tanggalTercapai: tanggal,
+              });
+            }
+
+            // ✅ OPSIONAL: Kalau saldo turun lagi di bawah target, hapus tanggal
+            if (kekurangan > 0 && tabungan.tanggalTercapai) {
+              db.ref(`tabungan/${uid}/${id}/tanggalTercapai`).remove();
+            }
           });
         });
       }
