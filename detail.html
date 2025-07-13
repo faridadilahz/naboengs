@@ -552,12 +552,22 @@
 
           // ✅ Tambahkan listener untuk tombol batal/tutup
           batalBtn.onclick = () => {
-            popup.classList.remove("show");
+            popup.classList.remove("show"); // Tutup popup tambah/ubah
             document.getElementById("jumlah").value = "";
             document.getElementById("keterangan").value = "";
 
-            // Pastikan bersih ke halaman detail
-            if (location.hash === "#popup") history.back();
+            if (location.hash === "#edit-riwayat") {
+              // ✅ Kalau mode edit riwayat, balik ke popup detail
+              popupDetailRiwayat.classList.add("show");
+              history.replaceState({ popup: "detail" }, "", "#detail");
+            } else {
+              // ✅ Kalau mode tambah transaksi, hapus semua hash
+              const cleanUrl =
+                window.location.origin +
+                window.location.pathname +
+                window.location.search;
+              history.replaceState({}, "", cleanUrl);
+            }
           };
 
           // Tampilkan popup edit
