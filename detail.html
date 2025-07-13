@@ -195,6 +195,11 @@
         }
       });
 
+      const backBtn = document.querySelector(".back-btn");
+      backBtn.addEventListener("click", () => {
+        window.location.href = "index.html";
+      });
+
       function loadDetail() {
         db.ref(`tabungan/${uid}/${id}`).on("value", (snapshot) => {
           const data = snapshot.val();
@@ -348,49 +353,48 @@
       });
 
       openBtn.onclick = () => {
+        // Kosongkan field setiap kali buka popup tambah
+        document.getElementById("jumlah").value = "";
+        document.getElementById("keterangan").value = "";
+        document.querySelector(
+          'input[name="jenis"][value="tambah"]'
+        ).checked = true;
+
+        // Pastikan popup dalam mode "Tambah" bukan Edit
+        simpanBtn.replaceWith(simpanBtn.cloneNode(true)); // Hapus semua event lama
+        const newSimpanBtn = document.getElementById("simpan-transaksi");
+
+        // Tambahkan listener untuk tambah transaksi
+        newSimpanBtn.onclick = () => {
+          const jenis = document.querySelector(
+            'input[name="jenis"]:checked'
+          ).value;
+          const jumlah = parseInt(
+            parseRupiah(document.getElementById("jumlah").value)
+          );
+          const keterangan = document.getElementById("keterangan").value.trim();
+
+          if (!jumlah) return alert("Masukkan nominal dulu ya!");
+
+          const waktu = new Date().toLocaleDateString("id-ID");
+          const riwayat = { jenis, jumlah, waktu };
+          if (keterangan) riwayat.keterangan = keterangan;
+
+          db.ref(`riwayat/${uid}/${id}`)
+            .push(riwayat)
+            .then(() => {
+              popup.classList.remove("show");
+              if (location.hash === "#popup") history.back(); // Hapus #popup
+              loadRiwayat();
+            });
+        };
+
+        // Tampilkan popup tambah
         popup.classList.add("show");
         setupRupiahInput("jumlah");
 
-        // Push state ke history supaya tombol back bisa close popup
+        // Tambahkan state history baru untuk popup tambah
         history.pushState({ popup: true }, "", "#popup");
-      };
-
-      batalBtn.onclick = () => {
-        popup.classList.remove("show");
-        document.getElementById("jumlah").value = "";
-        document.getElementById("keterangan").value = "";
-
-        // Balikkan history kalau popup masih ada hash
-        if (location.hash === "#popup") history.back();
-      };
-
-      simpanBtn.onclick = () => {
-        const jenis = document.querySelector(
-          'input[name="jenis"]:checked'
-        ).value;
-        const jumlah = parseInt(
-          parseRupiah(document.getElementById("jumlah").value)
-        );
-        const keterangan = document.getElementById("keterangan").value.trim();
-
-        if (!jumlah) return alert("Masukkan nominal dulu ya!");
-
-        const waktu = new Date().toLocaleDateString("id-ID");
-
-        const riwayat = { jenis, jumlah, waktu };
-        if (keterangan) riwayat.keterangan = keterangan;
-
-        db.ref(`riwayat/${uid}/${id}`)
-          .push(riwayat)
-          .then(() => {
-            popup.classList.remove("show");
-            document.getElementById("jumlah").value = "";
-            document.getElementById("keterangan").value = "";
-
-            if (location.hash === "#popup") history.back();
-
-            loadRiwayat();
-          });
       };
 
       function loadRiwayat() {
@@ -490,92 +494,84 @@
       };
 
       // ✅ Edit riwayat
-ubahRiwayatBtn.onclick = () => {
-  const key = ubahRiwayatBtn.getAttribute("data-key");
+      ubahRiwayatBtn.onclick = () => {
+        const key = ubahRiwayatBtn.getAttribute("data-key");
 
-  // Ambil data riwayat lama
-  db.ref(`riwayat/${uid}/${id}/${key}`).once("value", (snapshot) => {
-    const data = snapshot.val();
+        // Ambil data riwayat lama
+        db.ref(`riwayat/${uid}/${id}/${key}`).once("value", (snapshot) => {
+          const data = snapshot.val();
 
-    // Isi data lama ke form
-    document.querySelector(`input[name="jenis"][value="${data.jenis}"]`).checked = true;
-    document.getElementById("jumlah").value = formatRupiah(data.jumlah.toString());
-    document.getElementById("keterangan").value = data.keterangan || "";
+          // Isi data lama ke form
+          document.querySelector(
+            `input[name="jenis"][value="${data.jenis}"]`
+          ).checked = true;
+          document.getElementById("jumlah").value = formatRupiah(
+            data.jumlah.toString()
+          );
+          document.getElementById("keterangan").value = data.keterangan || "";
 
-    // Ganti listener tombol simpan supaya tidak dobel
-    simpanBtn.replaceWith(simpanBtn.cloneNode(true));
-    const newSimpanBtn = document.getElementById("simpan-transaksi");
+          // Ganti listener tombol simpan supaya tidak dobel
+          simpanBtn.replaceWith(simpanBtn.cloneNode(true));
+          const newSimpanBtn = document.getElementById("simpan-transaksi");
 
-    // ✅ Simpan perubahan riwayat
-    newSimpanBtn.onclick = () => {
-      const jenis = document.querySelector('input[name="jenis"]:checked').value;
-      const jumlah = parseInt(parseRupiah(document.getElementById("jumlah").value));
-      const keterangan = document.getElementById("keterangan").value.trim();
+          // ✅ Simpan perubahan riwayat
+          newSimpanBtn.onclick = () => {
+            const jenis = document.querySelector(
+              'input[name="jenis"]:checked'
+            ).value;
+            const jumlah = parseInt(
+              parseRupiah(document.getElementById("jumlah").value)
+            );
+            const keterangan = document
+              .getElementById("keterangan")
+              .value.trim();
 
-      if (!jumlah) return alert("Masukkan nominal dulu ya!");
+            if (!jumlah) return alert("Masukkan nominal dulu ya!");
 
-      const waktu = new Date().toLocaleString("id-ID");
-      const updatedRiwayat = { jenis, jumlah, waktu };
-      if (keterangan) updatedRiwayat.keterangan = keterangan;
+            const waktu = new Date().toLocaleString("id-ID");
+            const updatedRiwayat = { jenis, jumlah, waktu };
+            if (keterangan) updatedRiwayat.keterangan = keterangan;
 
-      db.ref(`riwayat/${uid}/${id}/${key}`)
-        .set(updatedRiwayat)
-        .then(() => {
-          popup.classList.remove("show"); // Tutup popup edit
-          popupDetailRiwayat.classList.add("show"); // Kembali ke detail
-          loadRiwayat();
+            db.ref(`riwayat/${uid}/${id}/${key}`)
+              .set(updatedRiwayat)
+              .then(() => {
+                // ✅ Tutup semua popup
+                popup.classList.remove("show"); // Tutup popup edit-riwayat
+                popupDetailRiwayat.classList.remove("show"); // Tutup popup detail
 
-          // ✅ Tutup #edit-riwayat & balik ke #detail
-          if (location.hash === "#edit-riwayat") {
-            history.replaceState({ popup: "detail" }, "", "#detail");
-          }
-        });
-    };
+                // ✅ Hapus hash tapi pertahankan ?id=xxxx supaya UID tidak hilang
+                const cleanUrl =
+                  window.location.origin +
+                  window.location.pathname +
+                  window.location.search;
+                history.pushState({}, "", cleanUrl);
 
-    // ✅ Tambahkan listener untuk tombol batal/tutup
-    batalBtn.onclick = () => {
-      popup.classList.remove("show"); // Tutup popup edit
-      popupDetailRiwayat.classList.add("show"); // Kembali ke detail
+                loadRiwayat(); // Refresh daftar riwayat
+              });
+          };
 
-      // ✅ Balik ke #detail
-      if (location.hash === "#edit-riwayat") {
-        history.replaceState({ popup: "detail" }, "", "#detail");
-      }
-    };
+          // ✅ Tambahkan listener untuk tombol batal/tutup
+          batalBtn.onclick = () => {
+            popup.classList.remove("show");
+            document.getElementById("jumlah").value = "";
+            document.getElementById("keterangan").value = "";
 
-    // Tampilkan popup edit
-    popup.classList.add("show");
-    popupDetailRiwayat.classList.remove("show");
+            // Pastikan bersih ke halaman detail
+            if (location.hash === "#popup") history.back();
+          };
 
-    // ✅ Tambahkan hash #edit-riwayat
-    history.pushState({ popup: "edit-riwayat" }, "", "#edit-riwayat");
-
-    // ✅ Handle tombol back (back ke popup detail)
-    const popstateHandler = () => {
-      if (location.hash !== "#edit-riwayat") {
-        popup.classList.remove("show"); // Tutup popup edit
-        popupDetailRiwayat.classList.add("show"); // Kembali ke detail
-        window.removeEventListener("popstate", popstateHandler);
-      }
-    };
-    window.addEventListener("popstate", popstateHandler);
-  });
-};
-
-          popup.classList.add("show"); // Tampilkan popup edit
+          // Tampilkan popup edit
+          popup.classList.add("show");
           popupDetailRiwayat.classList.remove("show");
 
-          // ✅ Tambahkan #edit ke URL
-          history.pushState({ popup: "edit" }, "", "#edit");
+          // ✅ Tambahkan hash #edit-riwayat
+          history.pushState({ popup: "edit-riwayat" }, "", "#edit-riwayat");
 
-          // ✅ Handle tombol back
+          // ✅ Handle tombol back (back ke popup detail)
           const popstateHandler = () => {
-            if (location.hash !== "#edit") {
-              // Balik ke detail popup kalau hash bukan #edit
-              popup.classList.remove("show");
-              popupDetailRiwayat.classList.add("show");
-
-              // Hapus listener biar gak numpuk
+            if (location.hash !== "#edit-riwayat") {
+              popup.classList.remove("show"); // Tutup popup edit
+              popupDetailRiwayat.classList.add("show"); // Kembali ke detail
               window.removeEventListener("popstate", popstateHandler);
             }
           };
