@@ -475,7 +475,18 @@
       // ✅ Tutup popup detail
       tutupRiwayatBtn.onclick = () => {
         popupDetailRiwayat.classList.remove("show");
-        if (location.hash === "#detail") history.back(); // Hapus #detail dari URL
+
+        // Kalau ada hash #detail, hapus hash nya
+        if (location.hash === "#detail") {
+          history.back(); // Back ke state sebelumnya
+        } else {
+          // Kalau nggak ada hash, pastikan hash clear
+          history.replaceState(
+            {},
+            "",
+            window.location.pathname + window.location.search
+          );
+        }
       };
 
       // ✅ Hapus riwayat
