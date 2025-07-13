@@ -341,6 +341,22 @@
       const simpanBtn = document.getElementById("simpan-transaksi");
       const batalBtn = document.getElementById("batal-transaksi");
 
+      // ✅ Pastikan tombol batal selalu nutup popup
+      batalBtn.onclick = () => {
+        popup.classList.remove("show");
+        document.getElementById("jumlah").value = "";
+        document.getElementById("keterangan").value = "";
+
+        // Opsional: hapus hash kalau ada
+        if (location.hash === "#popup") {
+          history.replaceState(
+            {},
+            "",
+            window.location.pathname + window.location.search
+          );
+        }
+      };
+
       // Handle tombol back untuk popup transaksi
       window.addEventListener("popstate", (event) => {
         if (popup.classList.contains("show")) {
@@ -473,20 +489,16 @@
       );
 
       // ✅ Tutup popup detail
+      // ✅ Tutup popup detail & bersihkan semua hash/history
       tutupRiwayatBtn.onclick = () => {
-        popupDetailRiwayat.classList.remove("show");
+        popupDetailRiwayat.classList.remove("show"); // Tutup popup
 
-        // Kalau ada hash #detail, hapus hash nya
-        if (location.hash === "#detail") {
-          history.back(); // Back ke state sebelumnya
-        } else {
-          // Kalau nggak ada hash, pastikan hash clear
-          history.replaceState(
-            {},
-            "",
-            window.location.pathname + window.location.search
-          );
-        }
+        // Hapus SEMUA hash apapun yang ada (langsung bersih)
+        history.pushState(
+          {},
+          "",
+          window.location.pathname + window.location.search
+        );
       };
 
       // ✅ Hapus riwayat
