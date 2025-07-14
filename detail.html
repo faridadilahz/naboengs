@@ -201,9 +201,17 @@
       });
 
       function loadDetail() {
+        const loader = document.getElementById("loader-overlay");
+
         db.ref(`tabungan/${uid}/${id}`).on("value", (snapshot) => {
           const data = snapshot.val();
+
+          // ✅ Hilangkan loader setelah data diterima
+          loader.style.opacity = 0;
+          loader.style.display = "none";
+
           if (!data) return;
+
           document.getElementById("gambar-detail").src = data.gambar;
           document.getElementById("nama-detail").textContent = data.nama;
           document.getElementById("target-detail").textContent =
@@ -678,12 +686,6 @@
       function parseRupiah(str) {
         return str.replace(/[^\d]/g, "");
       }
-
-      setTimeout(() => {
-        const loader = document.getElementById("loader-overlay");
-        loader.style.opacity = 0;
-        loader.style.display = "none";
-      }, 2500);
     </script>
   </body>
 </html>
