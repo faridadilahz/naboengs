@@ -271,11 +271,33 @@
       });
 
       function simpanData(nama, target, perhari, gambarBase64) {
+        // ✅ Tampilkan loader
+        const loader = document.getElementById("loader-overlay");
+        loader.style.display = "flex";
+        loader.style.opacity = 1;
+
         const newRef = db.ref("tabungan/" + uid).push();
         const data = { nama, target, perhari, gambar: gambarBase64 };
-        newRef.set(data).then(() => {
-          closePopup();
-        });
+
+        newRef
+          .set(data)
+          .then(() => {
+            // ✅ Sembunyikan loader setelah berhasil
+            loader.style.opacity = 0;
+            setTimeout(() => {
+              loader.style.display = "none";
+            }, 300); // biar smooth
+
+            closePopup();
+          })
+          .catch((error) => {
+            // ✅ Kalau gagal, sembunyikan loader dan tampilkan error
+            loader.style.opacity = 0;
+            setTimeout(() => {
+              loader.style.display = "none";
+            }, 300);
+            alert("Gagal menyimpan data: " + error.message);
+          });
       }
 
       function tampilkanData(data, key) {
@@ -368,9 +390,15 @@
         const userRef = db.ref("tabungan/" + uid);
         const list = document.getElementById("data-list");
         const emptyMessage = document.getElementById("empty-message");
+        const loader = document.getElementById("loader-overlay");
 
         userRef.on("value", (snapshot) => {
           list.innerHTML = "";
+
+          // ✅ Hilangkan loader setelah data diterima (apapun isinya)
+          loader.style.opacity = 0;
+          loader.style.display = "none";
+
           if (!snapshot.exists()) {
             emptyMessage.style.display = "block";
           } else {
@@ -402,12 +430,6 @@
             perhari.style.visibility = selesai ? "hidden" : "visible";
         });
       }
-
-      setTimeout(() => {
-        const loader = document.getElementById("loader-overlay");
-        loader.style.opacity = 0;
-        loader.style.display = "none";
-      }, 2500);
     </script>
   </body>
 </html>
