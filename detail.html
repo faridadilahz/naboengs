@@ -76,7 +76,12 @@
             <img
               id="edit-preview-img"
               src=""
-              style="width: 100%; border-radius: 8px; margin-bottom: 10px"
+              style="
+                width: 100%;
+                height: 70px;
+                border-radius: 8px;
+                margin-bottom: 10px;
+              "
             />
 
             <label for="edit-image-upload">Ganti Gambar</label>
@@ -330,7 +335,6 @@
           db.ref(`tabungan/${uid}/${id}`)
             .remove()
             .then(() => {
-              alert("Tabungan berhasil dihapus.");
               window.location.href = "index.html";
             })
             .then(() => {
