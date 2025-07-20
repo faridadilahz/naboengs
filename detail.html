@@ -200,18 +200,9 @@
         }
       });
 
-      history.pushState(null, null, location.href);
-
-      window.addEventListener("popstate", function () {
-        // Back button langsung ke index.html
-        window.location.replace("index.html");
-      });
-
-      window.addEventListener("hashchange", function () {
-        // Kalau ada hash (#popup, dll), langsung buang
-        if (location.hash) {
-          window.location.replace("index.html");
-        }
+      const backBtn = document.querySelector(".back-btn");
+      backBtn.addEventListener("click", () => {
+        window.location.href = "index.html";
       });
 
       function loadDetail() {
