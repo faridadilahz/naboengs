@@ -13,7 +13,10 @@ body {
   font-family: "Inter", sans-serif;
   background-color: #1a1a19;
   color: #ffffff;
-  min-height: 100vh;
+  min-height: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-bottom: 100px;
 }
 
 @media screen and (max-width: 768px) {
@@ -169,7 +172,6 @@ body {
     margin: auto;
     height: auto;
     max-height: 90vh;
-    border-bottom: 7px solid #357a38;
     transition: all 0.3s;
   }
 
@@ -602,12 +604,15 @@ body {
     background: #ffffff;
     border-radius: 10px;
     padding: 12px 16px;
-    margin-bottom: 10px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     font-family: "Inter", sans-serif;
     cursor: pointer;
+    transition: all 0.3s;
   }
 
+  .riwayat-item:hover {
+    transform: scale(1.02);
+  }
   /* Tambah (warna hijau) */
   .riwayat-item.tambah .nominal {
     color: #219653;
@@ -643,6 +648,53 @@ body {
 }
 
 @media screen and (max-width: 500px) {
+  .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-container label {
+    font-weight: 600;
+    font-size: 17px;
+    color: #ffffff;
+    text-align: left;
+  }
+
+  .form-container input {
+    font-family: "Inter", sans-serif;
+    padding: 10px;
+    border: 1px solid #234123;
+    border-radius: 8px;
+    background: #2c2c2c;
+    color: #fff;
+    font-size: 14px;
+    transition: all 0.5s;
+  }
+
+  .form-container input:focus {
+    border: 1px solid #357a38;
+  }
+
+  .simpan-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  #simpan-edit {
+    font-family: "Inter", sans-serif;
+    width: auto;
+    padding: 10px 10px;
+    color: #ffffff;
+    background: #389138;
+    border: none;
+    border-radius: 6px;
+    margin-left: 4px;
+    margin-top: 40px;
+    cursor: pointer;
+    font-size: 19px;
+  }
+
   .floating-button {
     position: fixed;
     right: 20px;
