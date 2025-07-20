@@ -203,13 +203,13 @@
       // Jika user tekan tombol back bawaan device
       window.addEventListener("popstate", () => {
         // Langsung ke index.html
-        window.location.href = "index.html";
+        window.location.replace = "index.html";
       });
 
       // Tambahan: Kalau ada hash (#popup, dll), langsung buang dan ke index.html
       window.addEventListener("hashchange", () => {
         if (location.hash) {
-          window.location.href = "index.html";
+          window.location.replace = "index.html";
         }
       });
 
